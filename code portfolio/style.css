@@ -2,14 +2,14 @@
 :root:not([data-theme="light"]){color-scheme:light}
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-behavior:smooth;scroll-padding-top:90px}
-body{margin:0;background:var(--sage);color:var(--ink);font:300 16px/1.6 var(--sans)}
+body{margin:0;background:var(--cream);color:var(--ink);font:300 16px/1.6 var(--sans)}
 a{color:inherit}
 :focus-visible{outline:3px solid var(--ink);outline-offset:3px}
-.frame{max-width:1180px;margin:0 auto;background:var(--cream);border:1.5px dashed var(--ink);border-top:0}
+.frame{width:100%;background:var(--cream);overflow-x:clip}
 .bar{background:var(--blue);font:500 12px var(--mono);text-align:center;padding:8px 40px;position:relative}
 .bar button{position:absolute;right:12px;top:4px;border:0;background:none;font-size:18px;cursor:pointer}
 .grid{background-image:linear-gradient(#1c1c1c14 1px,transparent 1px),linear-gradient(90deg,#1c1c1c14 1px,transparent 1px);background-size:28px 28px}
-nav{position:sticky;top:10px;z-index:10;margin:16px;background:var(--cream);border:1.5px solid var(--ink);border-radius:10px;display:flex;align-items:center;justify-content:space-between;padding:10px 20px;gap:12px}
+nav{position:sticky;top:10px;z-index:10;width:calc(100% - 32px);max-width:1240px;margin:16px auto;background:var(--cream);border:1.5px solid var(--ink);border-radius:10px;display:flex;align-items:center;justify-content:space-between;padding:10px 20px;gap:12px}
 .logo{font:400 34px/1 var(--serif);text-decoration:none;letter-spacing:-.04em}
 nav ul{display:flex;gap:22px;list-style:none;margin:0;padding:0;font:500 12px var(--mono);text-transform:uppercase}
 nav ul a{text-decoration:none}nav ul a:hover{text-decoration:underline}
@@ -29,10 +29,10 @@ mark{background:var(--pink);padding:0 .15em;color:inherit}
 .ticker{background:var(--sage);border-block:1.5px solid var(--ink);overflow:hidden;white-space:nowrap;font:500 12px var(--mono);padding:10px 0}
 .ticker div{display:inline-block;animation:tk 28s linear infinite}
 @keyframes tk{to{transform:translateX(-50%)}}
-section{padding:70px 24px}
+section{padding:70px clamp(16px,4vw,48px)}
 .c{text-align:center;max-width:720px;margin:0 auto}
 .c h2{font-size:clamp(28px,4vw,42px);font-family:var(--sans);font-weight:600;letter-spacing:-.02em;line-height:1.15}
-.car{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:10px 4px 24px;scrollbar-width:none;margin-top:36px}
+.car{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:10px 4px 24px;scrollbar-width:none;margin:36px auto 0;max-width:1180px}
 .car::-webkit-scrollbar{display:none}
 .card{flex:0 0 min(270px,80%);scroll-snap-align:start;border:1.5px solid var(--ink);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s}
 .card:hover{transform:translateY(-4px)}

@@ -1,5 +1,5 @@
 // Paste your Google Apps Script /exec URL here. Empty = demo mode.
-const APPS_SCRIPT_URL = "";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxRRupF37Qdr_VAoRT8MIE1JqJn5e2q4MJdmPSuVSU_JKl1RGlhFuKAKE1_IAknMRgNg/exec";
 const $ = s => document.querySelector(s);
 $('#tk').innerHTML = '<span>RSVPS MADE SIMPLE &nbsp;|&nbsp; SAVE THE DATES MADE SIMPLE &nbsp;|&nbsp; </span>'.repeat(16);
 
