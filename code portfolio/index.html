@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RSVPretty – event pages that send RSVPs straight to Google Sheets</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;600&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="frame">
+<div class="bar" id="bar">New: Wedding save-the-date templates are live!<button aria-label="Dismiss announcement" onclick="bar.remove()">×</button></div>
+
+<nav aria-label="Main">
+<a class="logo" href="#top">rsvpretty.</a>
+<ul id="menu"><li><a href="#about">About</a></li><li><a href="#templates">Templates</a></li><li><a href="#how">How it works</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#faq">FAQ</a></li></ul>
+<a class="btn go" href="#demo">Start free</a>
+<button id="burger" aria-label="Open menu" aria-expanded="false">☰</button>
+</nav>
+
+<header class="hero grid" id="top">
+<span class="st" style="left:12%;top:70px">🎉</span><span class="st" style="right:12%;top:90px;animation-delay:-1s">💌</span><span class="st" style="left:6%;bottom:110px;animation-delay:-2s">🪩</span><span class="st" style="right:8%;bottom:90px;animation-delay:-3s">📅</span>
+<h1><mark>the easiest way</mark> to<br>collect rsvps<br>for any event</h1>
+<span class="tag b" style="left:7%;top:48%">Where invites get simple<br>and guests get connected</span>
+<a class="btn" href="#demo">Create your event page</a>
+</header>
+
+<div class="ticker" aria-hidden="true"><div id="tk"></div></div>
+
+<section id="about">
+<div class="c"><h2>For the overwhelmed hosts, the spreadsheet-haters and the event obsessed.</h2>
+<p>Pick a pretty template, add your details, share one link. Every reply lands in your Google Form and Sheet by itself. No copying, no chasing.</p></div>
+<div class="car" id="car" tabindex="0" aria-label="What you can do">
+<article class="card"><div class="ph bg-p">💍</div><div class="t bg-p"><h3>Build an RSVP page</h3><p>Name, meal choice, plus-ones. Ask what you need and nothing else.</p><a class="btn" href="#templates">Start building</a></div></article>
+<article class="card"><div class="ph bg-b">📅</div><div class="t bg-b"><h3>Create a save the date</h3><p>Give guests the date early, with a page that looks as good as the invite.</p><a class="btn" href="#templates">Browse designs</a></div></article>
+<article class="card"><div class="ph bg-g">📋</div><div class="t bg-g"><h3>Connect Google Forms</h3><p>Paste one link. Responses flow into the Form and Sheet you already use.</p><a class="btn" href="#how">See how it works</a></div></article>
+<article class="card"><div class="ph bg-p">🔗</div><div class="t bg-p"><h3>Share with guests</h3><p>One link for text, email or a QR code on the printed invite.</p><a class="btn" href="#demo">Get your link</a></div></article>
+<article class="card"><div class="ph bg-b">📈</div><div class="t bg-b"><h3>Track replies live</h3><p>Watch yes, no and maybe add up as they arrive.</p><a class="btn" href="#demo">See the demo</a></div></article>
+</div>
+<div class="arrows"><button aria-label="Previous cards" data-d="-1">←</button><button aria-label="Next cards" data-d="1">→</button></div>
+</section>
+
+<section>
+<div class="two">
+<div><p style="font:500 12px var(--mono);text-transform:uppercase">The builder</p>
+<h2 class="big">build it. share it. watch the replies roll in.</h2>
+<p style="margin:20px 0 24px">Change the date, venue, photos and questions in one panel. Your page updates as you type. Publish it, or download the files and host them anywhere.</p>
+<a class="btn" href="#demo">Try the free builder</a></div>
+<div class="mock" aria-label="Builder preview"><span class="disco">🪩</span><strong>Event details</strong><i></i><i style="width:70%"></i><b>Sam &amp; Alex – 14 June</b><i></i><i style="width:50%"></i><b style="background:var(--blue)">+ Add question</b></div>
+</div></section>
+
+<section id="how" style="padding-top:0">
+<div class="c"><h2>Three steps. Done.</h2></div>
+<div class="steps">
+<div class="bg-p"><span>1</span><h3>Pick a template</h3><p>Weddings, birthdays, baby showers and more.</p></div>
+<div class="bg-b"><span>2</span><h3>Add your details</h3><p>Date, venue, photos and the questions you want answered.</p></div>
+<div class="bg-g"><span>3</span><h3>Share your link</h3><p>Each reply lands in your Google Sheet straight away.</p></div>
+</div></section>
+
+<section class="demo" id="demo">
+<div class="two">
+<div><h2 class="big" style="font-size:clamp(34px,5vw,54px)">try an rsvp. watch the sheet.</h2>
+<p style="margin:16px 0">Fill in the form. Your reply appears as a new row below, the same way it will in your own Google Sheet.</p>
+<div class="sheet" aria-live="polite"><div class="h"><span>Name</span><span>Attending</span><span>Dietary</span><span>Guests</span></div><div><span>Priya</span><span>Yes</span><span>Vegan</span><span>2</span></div><div id="rows"><span></span></div></div></div>
+<form id="rsvp" novalidate>
+<label>Name<input name="name" required autocomplete="name"></label>
+<label>Email<input name="email" type="email" required autocomplete="email"></label>
+<label>Attending<select name="attending"><option>Yes</option><option>No</option><option>Maybe</option></select></label>
+<label>Number of guests<input name="guests" type="number" min="1" max="10" value="1"></label>
+<label>Dietary notes<textarea name="dietary" rows="2"></textarea></label>
+<input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+<button class="btn" id="send">Send RSVP</button>
+<p id="msg" role="status"></p>
+</form>
+</div></section>
+
+<section id="templates">
+<div class="c"><h2>Templates for every kind of party</h2></div>
+<div class="chips" role="group" aria-label="Filter templates">
+<button aria-pressed="true" data-f="all">All</button><button aria-pressed="false" data-f="wedding">Weddings</button><button aria-pressed="false" data-f="birthday">Birthdays</button><button aria-pressed="false" data-f="baby">Baby showers</button><button aria-pressed="false" data-f="corporate">Corporate</button></div>
+<div class="tpl">
+<article class="card" data-c="wedding"><div class="ph bg-p">💐</div><div class="t"><h3>Garden vows</h3></div></article>
+<article class="card" data-c="wedding"><div class="ph bg-b">🕊️</div><div class="t"><h3>Save the date, simple</h3></div></article>
+<article class="card" data-c="birthday"><div class="ph bg-g">🎂</div><div class="t"><h3>Confetti 30th</h3></div></article>
+<article class="card" data-c="birthday"><div class="ph bg-p">🎈</div><div class="t"><h3>Kid's party</h3></div></article>
+<article class="card" data-c="baby"><div class="ph bg-b">🧸</div><div class="t"><h3>Little one on the way</h3></div></article>
+<article class="card" data-c="corporate"><div class="ph bg-g">🎤</div><div class="t"><h3>Team offsite</h3></div></article>
+</div></section>
+
+<section class="pinkband">
+<h2>Hear from our hosts</h2>
+<div class="car" style="max-width:1000px;margin-inline:auto">
+<article class="card"><div class="t"><h3>Mara, wedding</h3><p>I stopped checking my texts for replies. The Sheet just filled up.</p></div></article>
+<article class="card"><div class="t"><h3>Dev, birthday</h3><p>Set up in ten minutes. Everyone said it looked like I hired someone.</p></div></article>
+<article class="card"><div class="t"><h3>Lena, planner</h3><p>I use it for every client now. One Sheet per event, no mess.</p></div></article>
+</div></section>
+
+<section id="pricing">
+<div class="c"><h2>Pricing that stays simple</h2></div>
+<div class="price">
+<article class="card bg-b"><div class="t" style="align-items:stretch"><h3>Free</h3><div class="amt">$0</div><ul><li>1 event page</li><li>Google Sheet sync</li><li>Share by link</li></ul><a class="btn" href="#demo">Start free</a></div></article>
+<article class="card bg-p"><span class="tag b">Most popular</span><div class="t" style="align-items:stretch"><h3>Host</h3><div class="amt">$9</div><ul><li>Unlimited pages</li><li>Custom questions</li><li>Download as ZIP</li><li>Email confirmations</li></ul><a class="btn" href="#demo">Choose Host</a></div></article>
+<article class="card bg-g"><div class="t" style="align-items:stretch"><h3>Planner Pro</h3><div class="amt">$24</div><ul><li>Everything in Host</li><li>Client folders</li><li>Your own branding</li></ul><a class="btn" href="#demo">Choose Pro</a></div></article>
+</div></section>
+
+<section id="faq" style="padding-top:0">
+<div class="c" style="margin-bottom:28px"><h2>Questions</h2></div>
+<details><summary>Do my guests need a Google account?</summary><p>No. Guests fill in your page. Only you need Google.</p></details>
+<details><summary>Can I edit questions after sharing?</summary><p>Yes. Changes show up on your page right away.</p></details>
+<details><summary>Can I export responses?</summary><p>Yes. They live in your Google Sheet, so download as Excel or CSV any time.</p></details>
+<details><summary>How do I connect my Google Form?</summary><p>Deploy the Apps Script as a web app and paste its link into your page settings.</p></details>
+</section>
+
+<section class="cta"><h2>ready to stop chasing rsvps?</h2><a class="btn" href="#demo">Start free</a></section>
+
+<footer>
+<a class="logo" href="#top">rsvpretty.</a>
+<form onsubmit="event.preventDefault();this.querySelector('input').value='';this.querySelector('button').textContent='Subscribed'"><input type="email" placeholder="Event planning tips" aria-label="Email" required><button class="btn">Subscribe</button></form>
+<span>© 2026 RSVPretty</span>
+</footer>
+</div>
+
+<script src="script.js" defer></script>
+</body>
+</html>
