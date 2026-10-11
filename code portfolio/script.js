@@ -518,4 +518,127 @@ paint();
     }
     busy = false; send.disabled = false; send.textContent = 'Send my details';
   });
+
+  /* INSPIRATION COLLECTION MODAL
+   Paste at the very end of script.js. It needs no HTML changes: it makes every card in the
+   "Inspiration for every kind of event" section clickable and builds its own pop-up window.
+
+   HOW TO EDIT: every card title below must match the card's heading in index.html.
+   P(folder-name, number, short phrase, owner name, Pinterest pin link)
+   - Put the pictures in assets/inspo/, named like garden-1.jpg, garden-2.jpg, garden-3.jpg
+   - Use the REAL owner name and the REAL pin link (https://www.pinterest.com/pin/...).
+   - Only use pictures you saved from Pinterest as inspiration with credit. For the safest
+     option, use Pinterest's own "Embed" feature or ask the owner for permission. */
+(() => {
+  const P = (slug, n, caption, creditName = 'Owner name', pinUrl = '') =>
+    ({ src: `assets/inspo/${slug}-${n}.jpg`, caption, creditName, pinUrl });
+  const C = (blurb, pics) => ({ blurb, pics });
+
+  const COLLECTIONS = {
+    'Garden vows': C('Soft greens, big photos and one calm scroll.', [
+      P('garden', 1, 'A big photo opens the page'),
+      P('garden', 2, 'A simple timeline of the day'),
+      P('garden', 3, 'Map and RSVP at the end')]),
+    'Save the date, simple': C('Just the date, a countdown and one lovely photo.', [
+      P('save', 1, 'Big date, nothing else'),
+      P('save', 2, 'A countdown that ticks live'),
+      P('save', 3, 'One photo, one map link')]),
+    'Confetti 30th': C('Bright, playful and made for a party.', [
+      P('confetti', 1, 'Bold colors from the first scroll'),
+      P('confetti', 2, 'Party details in one glance'),
+      P('confetti', 3, 'RSVP buttons that pop')]),
+    "Kid's party": C('Cheerful pages that parents can read in seconds.', [
+      P('kids', 1, 'Big friendly headline'),
+      P('kids', 2, 'Date, time and place up front'),
+      P('kids', 3, 'Easy RSVP for busy parents')]),
+    'Little one on the way': C('Gentle colors for baby showers and christenings.', [
+      P('baby', 1, 'Soft palette, calm feeling'),
+      P('baby', 2, 'Story and photos together'),
+      P('baby', 3, 'Gift ideas and directions')]),
+    'Team offsite': C('Clear agendas for company days and gatherings.', [
+      P('team', 1, 'Agenda front and center'),
+      P('team', 2, 'Activities laid out simply'),
+      P('team', 3, 'Directions and RSVP')])
+  };
+  const FALLBACK = C('A few ideas to get you started.', [
+    P('ideas', 1, 'Clean, simple layout'), P('ideas', 2, 'Details at a glance'), P('ideas', 3, 'Easy RSVP')]);
+
+  /* ---------- build the pop-up window once ---------- */
+  const dlg = document.createElement('dialog');
+  dlg.id = 'inspo';
+  dlg.setAttribute('aria-labelledby', 'inspo-title');
+  dlg.innerHTML = `
+    <div class="mbox">
+      <button class="mclose" type="button" data-close aria-label="Close">×</button>
+      <h2 id="inspo-title"></h2>
+      <p class="ilead"></p>
+      <p class="pinnote"><span class="pinb">Pinterest</span><span>These pictures are from Pinterest. All credit goes to their owners.</span></p>
+      <div class="igrid"></div>
+      <p class="ifoot">Shown as inspiration only. Tap a name under a picture to visit the original pin.</p>
+      <button class="btn" type="button" data-open-inquiry>Plan something like this</button>
+    </div>`;
+  document.body.append(dlg);
+  const grid = dlg.querySelector('.igrid');
+
+  // only real Pinterest links become clickable
+  const isPin = u => /^https:\/\/([a-z0-9-]+\.)?(pinterest\.[a-z.]+|pin\.it)\//i.test(u);
+
+  function openCollection(title) {
+    const col = COLLECTIONS[title] || FALLBACK;
+    dlg.querySelector('#inspo-title').textContent = title;
+    dlg.querySelector('.ilead').textContent = col.blurb;
+    grid.replaceChildren();
+    col.pics.forEach((p, i) => {
+      const fig = document.createElement('figure');
+
+      const img = new Image();
+      img.className = 'ipic'; img.loading = 'lazy'; img.decoding = 'async';
+      img.src = p.src; img.alt = `${title} idea ${i + 1}: ${p.caption}`;
+      img.addEventListener('error', () => {           // a missing picture never breaks the window
+        const tile = document.createElement('span');
+        tile.className = 'ipic tph'; tile.textContent = 'Picture coming soon';
+        img.replaceWith(tile);
+      });
+
+      const cap = document.createElement('figcaption');
+      const phrase = document.createElement('b'); phrase.textContent = p.caption;
+      cap.append(phrase);
+
+      const credit = document.createElement('p'); credit.className = 'icredit';
+      const badge = document.createElement('span'); badge.className = 'pinb'; badge.textContent = 'Pinterest';
+      credit.append(badge, 'Credit: ');
+      if (isPin(p.pinUrl)) {
+        const a = document.createElement('a');
+        a.href = p.pinUrl; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.textContent = p.creditName;
+        credit.append(a);
+      } else credit.append(p.creditName);
+
+      fig.append(img, cap, credit);
+      grid.append(fig);
+    });
+    dlg.scrollTop = 0;
+    dlg.showModal();
+  }
+
+  // close on X, backdrop click, or when "Plan something like this" opens the booking window
+  dlg.addEventListener('click', e => {
+    if (e.target === dlg || e.target.closest('[data-close], [data-open-inquiry]')) dlg.close();
+  });
+
+  /* ---------- make every card clickable ---------- */
+  document.querySelectorAll('.tpl .card').forEach(card => {
+    const title = card.querySelector('h3').textContent.trim();
+    card.tabIndex = 0;
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-haspopup', 'dialog');
+    card.setAttribute('aria-label', `See the ${title} inspiration collection`);
+    const more = document.createElement('span');
+    more.className = 'btn more'; more.setAttribute('aria-hidden', 'true'); more.textContent = 'See collection';
+    card.querySelector('.t').append(more);
+    card.addEventListener('click', () => openCollection(title));
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openCollection(title); }
+    });
+  });
+})();
 })();
