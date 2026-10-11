@@ -1,5 +1,5 @@
 // Paste your Google Apps Script /exec URL here. Empty = demo mode.
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxRRupF37Qdr_VAoRT8MIE1JqJn5e2q4MJdmPSuVSU_JKl1RGlhFuKAKE1_IAknMRgNg/exec";
+const APPS_SCRIPT_URL = "";
 const $ = s => document.querySelector(s);
 $('#tk').innerHTML = '<span>RSVPS MADE SIMPLE &nbsp;|&nbsp; SAVE THE DATES MADE SIMPLE &nbsp;|&nbsp; </span>'.repeat(16);
 
@@ -51,7 +51,7 @@ const spy = new IntersectionObserver(es => {
   if (Date.now() < lockUntil) return;
   es.forEach(e => { if (e.isIntersecting) setActive(e.target.id); }); // ids with no nav link (hero, demo) clear the highlight
 }, {rootMargin: '-40% 0px -55% 0px'});
-['top', 'about', 'how', 'demo', 'templates', 'pricing', 'faq'].forEach(id => { const s = document.getElementById(id); if (s) spy.observe(s); });
+['top', 'about', 'how', 'stack', 'demo', 'templates', 'pricing', 'faq', 'book'].forEach(id => { const s = document.getElementById(id); if (s) spy.observe(s); });
 
 /* ---------- Back to top ---------- */
 const totop = $('#totop');
@@ -60,7 +60,7 @@ totop.onclick = () => scrollTo({top: 0, behavior: 'smooth'});
 
 /* ---------- Background music ---------- */
 // Leave MUSIC_FILE empty to use the built-in soft synth loop, or set e.g. "music.mp3" to use your own track.
-const MUSIC_FILE = "";
+const MUSIC_FILE = "C:\\2ND YEAR\\htdocs\\RSVPRETTY\\code portfolio\\assets\\Amiel Sol - Ikaw Lang Patutunguhan (Official Lyric Video) - Shortcut.lnk";
 const mbtn = $('#music');
 let muted = false, audio, ctx, master, timer, nextT = 0, step = 0;
 try { muted = localStorage.getItem('rsvp-muted') === '1'; } catch (e) {}

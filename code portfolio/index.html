@@ -3,58 +3,68 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>RSVPretty – event pages that send RSVPs straight to Google Sheets</title>
+<title>RSVPretty – custom invitation websites with live RSVPs</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;600&family=DM+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="frame">
-<div class="bar" id="bar">New: Wedding save-the-date templates are live!<button aria-label="Dismiss announcement" onclick="bar.remove()">×</button></div>
+<div class="bar" id="bar">Now booking wedding, birthday and event invitation sites.<button aria-label="Dismiss announcement" onclick="bar.remove()">×</button></div>
 
 <nav class="grid" aria-label="Main">
 <a class="logo" href="#top">rsvpretty.</a>
-<ul id="menu"><li><a href="#about">About</a></li><li><a href="#templates">Templates</a></li><li><a href="#how">How it works</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#faq">FAQ</a></li></ul>
-<a class="btn go" href="#demo">Start free</a>
+<ul id="menu"><li><a href="#about">About</a></li><li><a href="#how">How it works</a></li><li><a href="#stack">Built with</a></li><li><a href="#templates">Templates</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#faq">FAQ</a></li></ul>
+<a class="btn go" href="#book">Book your site</a>
 <button id="burger" aria-label="Open menu" aria-expanded="false">☰</button>
 </nav>
 
 <header class="hero grid" id="top">
-<span class="st" style="left:12%;top:70px">🎉</span><span class="st" style="right:12%;top:90px;animation-delay:-1s">💌</span><span class="st" style="left:6%;bottom:110px;animation-delay:-2s">🪩</span><span class="st" style="right:8%;bottom:90px;animation-delay:-3s">📅</span>
-<h1><mark>the easiest way</mark> to<br>collect rsvps<br>for any event</h1>
+<span class="st" style="left:12%;top:70px"><img class="em" src="https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@v2.034/png/128/emoji_u1f389.png" alt="🎉" loading="lazy" decoding="async"></span><span class="st" style="right:12%;top:90px;animation-delay:-1s"><img class="em" src="https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@v2.034/png/128/emoji_u1f48c.png" alt="💌" loading="lazy" decoding="async"></span><span class="st" style="left:6%;bottom:110px;animation-delay:-2s"><img class="em" src="https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@v2.034/png/128/emoji_u1faa9.png" alt="🪩" loading="lazy" decoding="async"></span><span class="st" style="right:8%;bottom:90px;animation-delay:-3s"><img class="em" src="https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@v2.034/png/128/emoji_u1f4c5.png" alt="📅" loading="lazy" decoding="async"></span>
+<h1><mark>your invitation</mark><br>and your rsvp,<br>on one website</h1>
 <span class="tag b" style="left:7%;top:48%">Where invites get simple<br>and guests get connected</span>
-<a class="btn" href="#demo">Create your event page</a>
+<a class="btn" href="#book">Order your invitation site</a>
 </header>
 
 <div class="ticker" aria-hidden="true"><div id="tk"></div></div>
 
 <section id="about">
 <div class="c"><h2>For the overwhelmed hosts, the spreadsheet-haters and the event obsessed.</h2>
-<p>Pick a pretty template, add your details, share one link. Every reply lands in your Google Form and Sheet by itself. No copying, no chasing.</p></div>
-<div class="car" id="car" tabindex="0" aria-label="What you can do">
-<article class="card"><div class="ph bg-p">💍</div><div class="t bg-p"><h3>Build an RSVP page</h3><p>Name, meal choice, plus-ones. Ask what you need and nothing else.</p><a class="btn" href="#templates">Start building</a></div></article>
-<article class="card"><div class="ph bg-b">📅</div><div class="t bg-b"><h3>Create a save the date</h3><p>Give guests the date early, with a page that looks as good as the invite.</p><a class="btn" href="#templates">Browse designs</a></div></article>
-<article class="card"><div class="ph bg-g">📋</div><div class="t bg-g"><h3>Connect Google Forms</h3><p>Paste one link. Responses flow into the Form and Sheet you already use.</p><a class="btn" href="#how">See how it works</a></div></article>
-<article class="card"><div class="ph bg-p">🔗</div><div class="t bg-p"><h3>Share with guests</h3><p>One link for text, email or a QR code on the printed invite.</p><a class="btn" href="#demo">Get your link</a></div></article>
-<article class="card"><div class="ph bg-b">📈</div><div class="t bg-b"><h3>Track replies live</h3><p>Watch yes, no and maybe add up as they arrive.</p><a class="btn" href="#demo">See the demo</a></div></article>
+<p>Tell me about your event. I design and build your invitation website, put it online, and send you one link. Guests see the full invitation and reply on the same page. You watch every answer land in Google Sheets, live.</p></div>
+<div class="car" id="car" tabindex="0" aria-label="What you get">
+<article class="card"><div class="ph bg-p"><img class="em" src="https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@v2.034/png/128/emoji_u1f48c.png" alt="💌" loading="lazy" decoding="async"></div><div class="t bg-p"><h3>A full invitation page</h3><p>Story, date, venue, map and photos, all in one pretty page.</p><a class="btn" href="#templates">See templates</a></div></article>
+<article class="card"><div class="ph bg-b"><img class="em" src="https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@v2.034/png/128/emoji_u2705.png" alt="✅" loading="lazy" decoding="async"></div><div class="t bg-b"><h3>RSVP on the page</h3><p>Guests answer right there. No Google Form link, no redirects.</p><a class="btn" href="#demo">Try the demo</a></div></article>
+<article class="card"><div class="ph bg-g"><img class="em" src="https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@v2.034/png/128/emoji_u1f4ca.png" alt="📊" loading="lazy" decoding="async"></div><div class="t bg-g"><h3>Live in Google Sheets</h3><p>Every reply appears in your Sheet the moment it is sent.</p><a class="btn" href="#how">How it works</a></div></article>
+<article class="card"><div class="ph bg-p"><img class="em" src="https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@v2.034/png/128/emoji_u1f4c5.png" alt="📅" loading="lazy" decoding="async"></div><div class="t bg-p"><h3>Save the dates too</h3><p>Send an early page now, upgrade it to the full invitation later.</p><a class="btn" href="#pricing">See packages</a></div></article>
+<article class="card"><div class="ph bg-b"><img class="em" src="https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@v2.034/png/128/emoji_u1f680.png" alt="🚀" loading="lazy" decoding="async"></div><div class="t bg-b"><h3>Built and hosted for you</h3><p>I build it, put it on Vercel and hand you the link.</p><a class="btn" href="#book">Book your site</a></div></article>
 </div>
 <div class="arrows"><button aria-label="Previous cards" data-d="-1">←</button><button aria-label="Next cards" data-d="1">→</button></div>
 </section>
 
 <section>
 <div class="two">
-<div><p style="font:500 12px var(--mono);text-transform:uppercase">The builder</p>
-<h2 class="big">build it. share it. watch the replies roll in.</h2>
-<p style="margin:20px 0 24px">Change the date, venue, photos and questions in one panel. Your page updates as you type. Publish it, or download the files and host them anywhere.</p>
-<a class="btn" href="#demo">Try the free builder</a></div>
-<div class="mock" aria-label="Builder preview"><span class="disco">🪩</span><strong>Event details</strong><i></i><i style="width:70%"></i><b>Sam &amp; Alex – 14 June</b><i></i><i style="width:50%"></i><b style="background:var(--blue)">+ Add question</b></div>
+<div><p style="font:500 12px var(--mono);text-transform:uppercase">The twist</p>
+<h2 class="big">one link. the whole invitation. live replies.</h2>
+<p style="margin:20px 0 24px">Most invites send guests off to a plain Google Form. Yours keeps everyone on your own elegant website: they read the invitation, answer, and you see it live in Google Sheets.</p>
+<a class="btn" href="#demo">Try the RSVP demo</a></div>
+<div class="mock" aria-label="Builder preview"><span class="disco"><img class="em" src="https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@v2.034/png/128/emoji_u1faa9.png" alt="🪩" loading="lazy" decoding="async"></span><strong>Your invitation</strong><i></i><i style="width:70%"></i><b>Sam &amp; Alex – 14 June</b><i></i><i style="width:50%"></i><b style="background:var(--blue)">+ Add question</b></div>
 </div></section>
 
 <section id="how" style="padding-top:0">
 <div class="c"><h2>Three steps. Done.</h2></div>
 <div class="steps">
-<div class="bg-p"><span>1</span><h3>Pick a template</h3><p>Weddings, birthdays, baby showers and more.</p></div>
-<div class="bg-b"><span>2</span><h3>Add your details</h3><p>Date, venue, photos and the questions you want answered.</p></div>
-<div class="bg-g"><span>3</span><h3>Share your link</h3><p>Each reply lands in your Google Sheet straight away.</p></div>
+<div class="bg-p"><span>1</span><h3>Tell me your event</h3><p>Share the date, venue, photos and what you want to ask your guests.</p></div>
+<div class="bg-b"><span>2</span><h3>I design and build it</h3><p>A custom invitation website with the RSVP form built right in.</p></div>
+<div class="bg-g"><span>3</span><h3>I put it online</h3><p>Live on Vercel. You share the link, and every reply lands in your Google Sheet.</p></div>
+</div></section>
+
+<section id="stack">
+<div class="c"><h2>What your site is built with</h2><p>Plain, fast, reliable tools. No page-builder lock-in, and you own the Sheet.</p></div>
+<div class="stackgrid">
+<article class="card"><div class="ph tx bg-p">HTML5</div><div class="t"><h3>Structure</h3><p>The invitation itself: story, schedule, venue and map.</p></div></article>
+<article class="card"><div class="ph tx bg-b">CSS3</div><div class="t"><h3>Design</h3><p>Your colors, fonts and layout, responsive on every phone and screen.</p></div></article>
+<article class="card"><div class="ph tx bg-g">JS</div><div class="t"><h3>Interaction</h3><p>The RSVP form, countdown and animations. Plain JavaScript, no heavy frameworks.</p></div></article>
+<article class="card"><div class="ph tx bg-p">Apps Script</div><div class="t"><h3>Reply catcher</h3><p>Google Apps Script receives each RSVP and writes it to your Google Sheet.</p></div></article>
+<article class="card"><div class="ph tx bg-b">Vercel</div><div class="t"><h3>Hosting</h3><p>Fast, global hosting with a shareable link, or your own domain.</p></div></article>
 </div></section>
 
 <section class="demo" id="demo">
@@ -75,43 +85,44 @@
 </div></section>
 
 <section id="templates">
-<div class="c"><h2>Templates for every kind of party</h2></div>
+<div class="c"><h2>Inspiration for every kind of event</h2></div>
 <div class="chips" role="group" aria-label="Filter templates">
 <button aria-pressed="true" data-f="all">All</button><button aria-pressed="false" data-f="wedding">Weddings</button><button aria-pressed="false" data-f="birthday">Birthdays</button><button aria-pressed="false" data-f="baby">Baby showers</button><button aria-pressed="false" data-f="corporate">Corporate</button></div>
 <div class="tpl">
-<article class="card" data-c="wedding"><div class="ph bg-p">💐</div><div class="t"><h3>Garden vows</h3></div></article>
-<article class="card" data-c="wedding"><div class="ph bg-b">🕊️</div><div class="t"><h3>Save the date, simple</h3></div></article>
-<article class="card" data-c="birthday"><div class="ph bg-g">🎂</div><div class="t"><h3>Confetti 30th</h3></div></article>
-<article class="card" data-c="birthday"><div class="ph bg-p">🎈</div><div class="t"><h3>Kid's party</h3></div></article>
-<article class="card" data-c="baby"><div class="ph bg-b">🧸</div><div class="t"><h3>Little one on the way</h3></div></article>
-<article class="card" data-c="corporate"><div class="ph bg-g">🎤</div><div class="t"><h3>Team offsite</h3></div></article>
+<article class="card" data-c="wedding"><div class="ph bg-p"><img class="em" src="https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@v2.034/png/128/emoji_u1f490.png" alt="💐" loading="lazy" decoding="async"></div><div class="t"><h3>Garden vows</h3></div></article>
+<article class="card" data-c="wedding"><div class="ph bg-b"><img class="em" src="https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@v2.034/png/128/emoji_u1f54a.png" alt="🕊" loading="lazy" decoding="async"></div><div class="t"><h3>Save the date, simple</h3></div></article>
+<article class="card" data-c="birthday"><div class="ph bg-g"><img class="em" src="https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@v2.034/png/128/emoji_u1f382.png" alt="🎂" loading="lazy" decoding="async"></div><div class="t"><h3>Confetti 30th</h3></div></article>
+<article class="card" data-c="birthday"><div class="ph bg-p"><img class="em" src="https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@v2.034/png/128/emoji_u1f388.png" alt="🎈" loading="lazy" decoding="async"></div><div class="t"><h3>Kid's party</h3></div></article>
+<article class="card" data-c="baby"><div class="ph bg-b"><img class="em" src="https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@v2.034/png/128/emoji_u1f9f8.png" alt="🧸" loading="lazy" decoding="async"></div><div class="t"><h3>Little one on the way</h3></div></article>
+<article class="card" data-c="corporate"><div class="ph bg-g"><img class="em" src="https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@v2.034/png/128/emoji_u1f3a4.png" alt="🎤" loading="lazy" decoding="async"></div><div class="t"><h3>Team offsite</h3></div></article>
 </div></section>
 
 <section class="pinkband">
 <h2>Hear from our hosts</h2>
 <div class="car" style="max-width:1000px;margin-inline:auto">
 <article class="card"><div class="t"><h3>Mara, wedding</h3><p>I stopped checking my texts for replies. The Sheet just filled up.</p></div></article>
-<article class="card"><div class="t"><h3>Dev, birthday</h3><p>Set up in ten minutes. Everyone said it looked like I hired someone.</p></div></article>
+<article class="card"><div class="t"><h3>Dev, birthday</h3><p>My guests saw the whole invitation and replied right there. No form link.</p></div></article>
 <article class="card"><div class="t"><h3>Lena, planner</h3><p>I use it for every client now. One Sheet per event, no mess.</p></div></article>
 </div></section>
 
 <section id="pricing">
-<div class="c"><h2>Pricing that stays simple</h2></div>
+<div class="c"><h2>Simple packages</h2></div>
 <div class="price">
-<article class="card bg-b"><div class="t" style="align-items:stretch"><h3>Free</h3><div class="amt">$0</div><ul><li>1 event page</li><li>Google Sheet sync</li><li>Share by link</li></ul><a class="btn" href="#demo">Start free</a></div></article>
-<article class="card bg-p"><span class="tag b">Most popular</span><div class="t" style="align-items:stretch"><h3>Host</h3><div class="amt">$9</div><ul><li>Unlimited pages</li><li>Custom questions</li><li>Download as ZIP</li><li>Email confirmations</li></ul><a class="btn" href="#demo">Choose Host</a></div></article>
-<article class="card bg-g"><div class="t" style="align-items:stretch"><h3>Planner Pro</h3><div class="amt">$24</div><ul><li>Everything in Host</li><li>Client folders</li><li>Your own branding</li></ul><a class="btn" href="#demo">Choose Pro</a></div></article>
+<article class="card bg-b"><div class="t" style="align-items:stretch"><h3>Save the Date</h3><div class="amt">$XX</div><ul><li>One-page save-the-date site</li><li>Countdown to your day</li><li>RSVP replies in Google Sheets</li><li>Hosted on Vercel</li></ul><a class="btn" href="#book">Book Save the Date</a></div></article>
+<article class="card bg-p"><span class="tag b">Most popular</span><div class="t" style="align-items:stretch"><h3>Full Invitation</h3><div class="amt">$XX</div><ul><li>Full invitation website</li><li>RSVP on the page, live in Sheets</li><li>Custom questions</li><li>Email confirmations</li></ul><a class="btn" href="#book">Book Full Invitation</a></div></article>
+<article class="card bg-g"><div class="t" style="align-items:stretch"><h3>Premium</h3><div class="amt">$XX</div><ul><li>Everything in Full Invitation</li><li>Custom design and animation</li><li>Your own domain</li><li>Priority edits</li></ul><a class="btn" href="#book">Book Premium</a></div></article>
 </div></section>
 
 <section id="faq" style="padding-top:0">
 <div class="c" style="margin-bottom:28px"><h2>Questions</h2></div>
-<details><summary>Do my guests need a Google account?</summary><p>No. Guests fill in your page. Only you need Google.</p></details>
-<details><summary>Can I edit questions after sharing?</summary><p>Yes. Changes show up on your page right away.</p></details>
-<details><summary>Can I export responses?</summary><p>Yes. They live in your Google Sheet, so download as Excel or CSV any time.</p></details>
-<details><summary>How do I connect my Google Form?</summary><p>Deploy the Apps Script as a web app and paste its link into your page settings.</p></details>
+<details><summary>Do my guests need a Google account?</summary><p>No. Guests open your link, read the invitation and reply on the page. Only you see the Sheet.</p></details>
+<details><summary>Do guests get sent to a Google Form?</summary><p>No. The RSVP form is part of your invitation website. Replies go to your Google Sheet behind the scenes.</p></details>
+<details><summary>Can I see replies live?</summary><p>Yes. Each answer shows up in your Google Sheet within seconds. Download it as Excel or CSV any time.</p></details>
+<details><summary>Can I change details after sharing?</summary><p>Yes. Send me the changes and I update the live site.</p></details>
+<details><summary>Who hosts the website?</summary><p>I deploy it on Vercel for you, and can connect your own domain.</p></details>
 </section>
 
-<section class="cta"><h2>ready to stop chasing rsvps?</h2><a class="btn" href="#demo">Start free</a></section>
+<section class="cta" id="book"><h2>ready for an invitation people actually answer?</h2><a class="btn" href="#book">Book your site</a></section>
 
 <footer>
 <a class="logo" href="#top">rsvpretty.</a>
