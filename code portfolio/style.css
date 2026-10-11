@@ -159,6 +159,7 @@ nav ul a.active {
   overflow: hidden;
 }
 
+
 h1, h2 {
   font-family: var(--serif);
   font-weight: 400;
@@ -223,7 +224,11 @@ mark {
 
 .ticker div {
   display: inline-block;
-  animation: tk 28s linear infinite;
+  animation: tk 60s linear infinite;
+}
+
+.ftick div {
+    animation-duration:80s
 }
 
 @keyframes tk {
@@ -784,11 +789,11 @@ body:has(dialog[open]){overflow:hidden}
 .done .btn{margin-top:8px}
 
 /* ---------- Big footer ---------- */
-footer.bigfoot{position:relative;display:block;padding:0;overflow:hidden;font-size:15px;border-top:1.5px solid var(--ink);background-color:var(--pink);background-image:linear-gradient(#ffffff55 1px,transparent 1px),linear-gradient(90deg,#ffffff55 1px,transparent 1px);background-size:22px 22px}
+footer.bigfoot{position:relative;display:block;padding:0;overflow:hidden;font-size:15px;border-top:1.5px solid var(--ink);background-color:var(--sage);background-image:linear-gradient(#ffffff55 1px,transparent 1px),linear-gradient(90deg,#ffffff55 1px,transparent 1px);background-size:22px 22px}
 .fstk{position:absolute;font-size:var(--s,64px);pointer-events:none;z-index:1}
 .bf-top{position:relative;padding:clamp(70px,10vw,120px) clamp(16px,4vw,48px) 40px;text-align:center}
 .bf-top h2{font-size:clamp(42px,8vw,108px);text-transform:lowercase}
-.bf-top mark{background:var(--cream);border:1.5px solid var(--ink)}
+.bf-top mark{background:var(--pink);border:1.5px solid var(--ink)}
 .bf-top p{max-width:520px;margin:20px auto 28px;font-size:17px}
 .bf-top .btn{background:var(--ink);color:var(--cream);box-shadow:4px 4px 0 var(--cream)}
 .bf-cols{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:32px;max-width:1000px;margin:0 auto;padding:20px clamp(16px,4vw,48px) 56px}

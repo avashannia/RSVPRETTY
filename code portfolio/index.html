@@ -140,24 +140,7 @@
                     <p>I deploy it on Vercel for you, and can connect your own domain.</p></details>
     </section>
 
-    <section class="cta" id="book">
-        <h2>ready for an invitation people actually answer?</h2>
-            <a class="btn" href="#book">Book your site</a>
-    </section>
 
-    <!--
-  ADD-ON HTML. Two pieces:
-
-  1) MODAL: paste it right before <script src="script.js" defer></script>
-  2) FOOTER: delete your old <footer>...</footer> and paste this one in its place
-     (it goes right after the "ready for an invitation..." call-to-action section).
-
-  Edit the social links (href="#") and the handle text in the footer.
-  Every "Book your site" button (href="#book") opens the modal automatically.
-  Any other button can open it too with the attribute: data-open-inquiry
--->
-
-<!-- ===== 1) INQUIRY MODAL ===== -->
 <dialog id="inquiry" aria-labelledby="inq-title">
   <div class="mbox">
     <button class="mclose" type="button" data-close aria-label="Close">×</button>
@@ -268,12 +251,13 @@
   <p class="bf-small">© 2026 RSVPretty. Made with love, hosted on Vercel.</p>
 </footer>
 
+        <!--
         <footer>
             <a class="logo" href="#top">rsvpretty.</a>
                 <form onsubmit="event.preventDefault();this.querySelector('input').value='';this.querySelector('button').textContent='Subscribed'">
                         <input type="email" placeholder="Event planning tips" aria-label="Email" required><button class="btn">Subscribe</button></form>
                             <span>© 2026 RSVPretty</span>
-        </footer>
+        </footer>-->
     </div>
 
         <button class="fab" id="music" aria-label="Toggle background music" aria-pressed="false">♪</button>
