@@ -754,3 +754,59 @@ footer input {
     scroll-behavior: auto;
   }
 }
+
+/* ADD-ON CSS: paste at the very end of style.css (or link it after style.css) */
+
+/* ---------- Inquiry modal ---------- */
+dialog#inquiry{width:calc(100% - 32px);max-width:560px;max-height:92vh;padding:0;overflow:auto;color:var(--ink);background:var(--cream);border:1.5px solid var(--ink);border-radius:18px;box-shadow:6px 6px 0 var(--ink)}
+dialog#inquiry[open]{animation:pop .25s ease-out}
+dialog#inquiry::backdrop{background:rgba(28,28,28,.55);backdrop-filter:blur(4px)}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.96)}}
+body:has(dialog[open]){overflow:hidden}
+.mbox{position:relative;padding:clamp(20px,4vw,32px)}
+.mclose{position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:50%;border:1.5px solid var(--ink);background:var(--cream);font-size:22px;line-height:1;cursor:pointer}
+.mclose:hover{background:var(--pink)}
+.mstk{position:absolute;top:-4px;right:58px;font-size:52px}
+#inqform{border:0;border-radius:0;padding:0;background:none}
+#inqform[hidden],.done[hidden]{display:none}
+#inqform h2,.done h2{font-size:clamp(30px,5vw,42px);text-transform:lowercase;padding-right:60px}
+.mlead{margin:0 0 4px}
+.seg{border:0;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg legend{font:500 12px var(--mono);padding:0;margin-bottom:6px}
+.seg label{position:relative}
+.seg input{position:absolute;opacity:0;width:1px;height:1px;padding:0;border:0}
+.seg span{display:block;text-align:center;border:1.5px solid var(--ink);border-radius:99px;padding:8px;font:600 13px var(--sans);cursor:pointer;background:#fff}
+.seg input:checked+span{background:var(--pink)}
+.seg input:focus-visible+span{outline:3px solid var(--ink);outline-offset:2px}
+.mnote{margin:0;padding:10px 12px;background:var(--blue);border:1.5px solid var(--ink);border-radius:10px;font-size:13.5px}
+.imsg{margin:0;min-height:22px;font-size:14px}
+.done p{margin:12px 0}
+.done .btn{margin-top:8px}
+
+/* ---------- Big footer ---------- */
+footer.bigfoot{position:relative;display:block;padding:0;overflow:hidden;font-size:15px;border-top:1.5px solid var(--ink);background-color:var(--pink);background-image:linear-gradient(#ffffff55 1px,transparent 1px),linear-gradient(90deg,#ffffff55 1px,transparent 1px);background-size:22px 22px}
+.fstk{position:absolute;font-size:var(--s,64px);pointer-events:none;z-index:1}
+.bf-top{position:relative;padding:clamp(70px,10vw,120px) clamp(16px,4vw,48px) 40px;text-align:center}
+.bf-top h2{font-size:clamp(42px,8vw,108px);text-transform:lowercase}
+.bf-top mark{background:var(--cream);border:1.5px solid var(--ink)}
+.bf-top p{max-width:520px;margin:20px auto 28px;font-size:17px}
+.bf-top .btn{background:var(--ink);color:var(--cream);box-shadow:4px 4px 0 var(--cream)}
+.bf-cols{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:32px;max-width:1000px;margin:0 auto;padding:20px clamp(16px,4vw,48px) 56px}
+.bf-cols h3{margin:0 0 12px;font:600 15px var(--sans)}
+.bf-cols ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.bf-cols li a{text-decoration:none;padding:2px 8px;margin-left:-8px;border-radius:99px}
+.bf-cols li a:hover{background:var(--cream);outline:1.5px solid var(--ink)}
+.soc{display:flex;flex-wrap:wrap;gap:12px}
+.soc a{width:54px;height:54px;border-radius:50%;border:1.5px solid var(--ink);background:var(--cream);display:grid;place-items:center;box-shadow:3px 3px 0 var(--ink);transition:transform .15s,background .15s,box-shadow .15s}
+.soc a:hover{transform:translate(-2px,-2px) rotate(-8deg);background:var(--blue);box-shadow:5px 5px 0 var(--ink)}
+.soc svg{width:24px;height:24px;fill:currentColor}
+.bf-handle{margin:14px 0 0;font:500 13px var(--mono)}
+.ftick{background:var(--ink);color:var(--sage);border-block:1.5px solid var(--ink)}
+.bf-word{font:400 clamp(72px,19vw,300px)/.8 var(--serif);letter-spacing:-.05em;text-align:center;white-space:nowrap;padding-top:.12em;margin-bottom:-.14em;user-select:none}
+.bf-small{position:relative;z-index:2;margin:0;padding:14px;text-align:center;font:500 12px var(--mono);background:var(--cream);border-top:1.5px solid var(--ink)}
+
+@media(max-width:800px){
+  .bf-cols{grid-template-columns:1fr 1fr}
+  .bf-soc{grid-column:1/-1}
+  .fstk{font-size:calc(var(--s,64px)*.6)}
+}
