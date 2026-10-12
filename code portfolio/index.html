@@ -12,7 +12,6 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;600&family=DM+Mono:wght@400;500&display=swap" />
     <link rel="stylesheet" href="style.css" />
-  </head>
   <body>
     <div class="frame">
       <div class="bar" id="bar">
@@ -291,72 +290,33 @@
       <section id="templates">
         <div class="c"><h2>Inspiration for every kind of event</h2></div>
         <div class="chips" role="group" aria-label="Filter templates">
-          <button aria-pressed="true" data-f="all">All</button><button
-            aria-pressed="false" data-f="wedding">Weddings</button><button
-            aria-pressed="false" data-f="birthday">Birthdays</button><button aria-pressed="false" data-f="kpop">K-pop cupsleeve</button><button
-            aria-pressed="false" data-f="baby">Baby showers</button><button
-            aria-pressed="false" data-f="corporate">Corporate</button>
+          <button aria-pressed="true" data-f="all">All</button>
+          <button aria-pressed="false" data-f="wedding">Weddings</button>
+          <button aria-pressed="false" data-f="birthday">Birthdays</button>
+          <button aria-pressed="false" data-f="kpop">K-pop cupsleeve</button>
+          <button aria-pressed="false" data-f="save">Save the Date</button>
+          <button aria-pressed="false" data-f="business">Small Business</button>
         </div>
         <div class="tpl">
           <article class="card" data-c="wedding">
-            <div class="ph bg-p">
-              <img
-                class="em"
-                src="./assets/new/pink_stickers_iphone___iOS_18_emoji_stickers___iOS_emoji___18_iOS_update___18_iOS_stickers___18-removebg-preview.png"
-                alt
-                aria-hidden="true" />
-            </div>
+            <div class="ph bg-p"><img class="template-preview" src="" alt="Wedding inspiration preview" loading="lazy"></div>
             <div class="t"><h3>Eternal Vows</h3></div>
           </article>
-          <article class="card" data-c="wedding">
-            <div class="ph bg-b">
-              <img
-                class="em"
-                src="./assets/new/download__7_-removebg-preview.png"
-                alt
-                aria-hidden="true" />
-            </div>
-            <div class="t"><h3>Save the date, simple</h3></div>
+          <article class="card" data-c="save">
+            <div class="ph bg-b"><img class="template-preview" src="" alt="Save-the-date inspiration preview" loading="lazy"></div>
+            <div class="t"><h3>Save the Date</h3></div>
           </article>
           <article class="card" data-c="birthday">
-            <div class="ph bg-g">
-              <img
-                class="em"
-                src="./assets/new/download__10_-removebg-preview.png"
-                alt
-                aria-hidden="true" />
-            </div>
-            <div class="t"><h3>Cheers to another year</h3></div>
+            <div class="ph bg-g"><img class="template-preview" src="assets/bday-1.jpg" alt="Birthday inspiration preview" loading="lazy"></div>
+            <div class="t"><h3>Cheers to Another Year</h3></div>
           </article>
           <article class="card" data-c="kpop">
-            <div class="ph bg-p">
-              <img
-                class="em"
-                src="./assets/new/download__9_-removebg-preview.png"
-                alt
-                aria-hidden="true" />
-            </div>
-            <div class="t"><h3>K-Pop Cupsleeve</h3></div>
+            <div class="ph bg-p"><img class="template-preview" src="assets/kpop-1.jpg" alt="K-pop cupsleeve inspiration preview" loading="lazy"></div>
+            <div class="t"><h3>Cupsleeve Event</h3></div>
           </article>
-          <article class="card" data-c="baby">
-            <div class="ph bg-b">
-              <img
-                class="em"
-                src="./assets/new/download__8_-removebg-preview.png"
-                alt
-                aria-hidden="true" />
-            </div>
-            <div class="t"><h3>New Chapter Gathering</h3></div>
-          </article>
-          <article class="card" data-c="corporate">
-            <div class="ph bg-g">
-              <img
-                class="em"
-                src="./assets/new/emoji-removebg-preview.png"
-                alt
-                aria-hidden="true" />
-            </div>
-            <div class="t"><h3>Annual gala</h3></div>
+          <article class="card" data-c="business">
+            <div class="ph bg-b"><img class="template-preview" src="assets/small-business-1.jpg" alt="Small business event inspiration preview" loading="lazy"></div>
+            <div class="t"><h3>Small Business</h3></div>
           </article>
         </div>
       </section>
@@ -528,8 +488,8 @@
                     <option>Birthday</option>
                     <option>K-pop cupsleeve event</option>
                     <option>Debut / 18th</option>
-                    <option>Baby shower / Christening</option>
-                    <option>Corporate event</option>
+                    <option>Baby shower</option>
+                    <option>Corporate event</option>\n                    <option>Small business</option>
                     <option>Save the date only</option>
                     <option>Other</option>
                   </select>

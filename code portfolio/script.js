@@ -255,34 +255,46 @@ paint();
      fill in the real owner and pin link. license is optional (leave it out if you have none).
      The event-type names below must match the options in the "Type of event" menu.
      ===================================================================== */
-  const T = (slug, n, title, description, creditName = 'Owner name', creditUrl = '', license = '') => ({
+  // Local preview images. Put these files in the project's assets folder.
+  // If your files are PNG/WebP instead of JPG, update the extensions here.
+  const CATEGORY_IMAGE = {
+    wedding: 'assets/wedding-1.jpg',
+    birthday: 'assets/bday-1.jpg',
+    kpop: 'assets/kpop-1.jpg',
+    save: 'assets/wedding-1.jpg',
+    'small-business': 'assets/small-business-1.jpg'
+  };
+  const T = (slug, n, title, description, creditName = 'View reference', creditUrl = '', license = '') => ({
     title, description,
-    images: ['a', 'b', 'c'].map(x => `assets/themes/${slug}-${n}-${x}.jpg`),
+    // Reuse the provided category preview when available; other categories use the existing naming convention.
+    images: CATEGORY_IMAGE[slug]
+      ? [CATEGORY_IMAGE[slug], CATEGORY_IMAGE[slug], CATEGORY_IMAGE[slug]]
+      : ['a', 'b', 'c'].map(x => `assets/themes/${slug}-${n}-${x}.jpg`),
     creditName, creditUrl, license
   });
   const isPin = u => /^https:\/\/([a-z0-9-]+\.)?(pinterest\.[a-z.]+|pin\.it)\//i.test(u);   // only real Pinterest links become clickable
   const THEMES = {
     'Wedding': [
-      T('wedding', 1, 'Minimal One-Pager', 'Single scroll: big names, date, schedule and RSVP'),
-      T('wedding', 2, 'Scrapbook Collage', 'Layered photos, handwritten touches, story and gallery'),
-      T('wedding', 3, 'Dark and Elegant', 'Moody look with a timeline, venue map and RSVP')
+      T('wedding', 1, 'Polaroid Theme', 'Personal photos with a nostalgic polaroid feel', 'View reference', 'https://ph.pinterest.com/pin/617415430212900037/'),
+      T('wedding', 2, 'Lace and Vintage', 'Romantic lace details and vintage styling', 'View reference', 'https://pin.it/3iMAYmtGW'),
+      T('wedding', 3, 'Modern and Comfy', 'Natural photos and relaxed everyday vibes', 'View reference', 'https://pin.it/2QqR9yUNA')
     ],
     'Birthday': [
-      T('birthday', 1, 'Bold Type Party', 'Giant headline, live countdown, party details and RSVP'),
-      T('birthday', 2, 'Photo Wall', 'A grid of memories first, short details, one RSVP button'),
-      T('birthday', 3, 'Confetti Playful', 'Bright shapes, big buttons, map and RSVP')
+      T('birthday', 1, 'Formal Elegance', 'A sophisticated birthday design', 'View reference', 'https://pin.it/2EW9r4Db9'),
+      T('birthday', 2, 'Demure', 'Soft, refined and understated', 'View reference', 'https://pin.it/2EW9r4Db9'),
+      T('birthday', 3, 'House Party', 'A relaxed and playful party vibe', 'View reference', 'https://pin.it/79f0VYz4G')
     ],
     'K-pop cupsleeve event': [
-      T('kpop', 1, 'Photocard Pop', 'Photocard-style collage with cupsleeve designs, date, cafe and map'),
-      T('kpop', 2, 'Cafe Menu', 'Event details laid out like a cafe menu, with freebies list and rules'),
-      T('kpop', 3, 'Neon Fan Night', 'Dark neon glow, live countdown, schedule and how to join')
+      T('kpop', 1, 'Dreamy', 'Soft colors and an atmospheric fan-event feel', 'View reference', 'https://pin.it/1hISUn6ZP'),
+      T('kpop', 2, 'Membership', 'A membership-inspired fan event', 'View reference', 'https://pin.it/57G6dCf4Z'),
+      T('kpop', 3, 'Colorful', 'Vibrant colors and playful fan-event styling', 'View reference', 'https://pin.it/7qtjVl9H7')
     ],
     'Debut / 18th': [
       T('debut', 1, 'Royal Portrait', 'Large portrait, story, program timeline and entourage'),
       T('debut', 2, 'Soft Glam', 'Gentle colors, gallery, details and RSVP'),
       T('debut', 3, 'Midnight Night', 'Dark theme, countdown, venue map and RSVP')
     ],
-    'Baby shower / Christening': [
+    'Baby shower': [
       T('baby', 1, 'Soft Pastel', 'Gentle colors, one hero photo, details and RSVP'),
       T('baby', 2, 'Storybook', 'Story, photos, gift ideas and directions'),
       T('baby', 3, 'Clean and Calm', 'Simple schedule, map and RSVP')
@@ -290,12 +302,17 @@ paint();
     'Corporate event': [
       T('corporate', 1, 'Agenda First', 'Timeline up top, speakers, venue and RSVP'),
       T('corporate', 2, 'Photo Banner', 'Big team photo, activities list and map'),
-      T('corporate', 3, 'Dark Gala', 'Elegant look, program, dress code and RSVP')
+      T('corporate', 3, 'Modern Formal', 'A polished corporate look, program and dress code')
     ],
     'Save the date only': [
-      T('save', 1, 'Big Date', 'One huge date, live countdown and a short message'),
-      T('save', 2, 'Photo Strip', 'Gallery first, then the date and a map link'),
-      T('save', 3, 'Bold Type', 'Large typography, countdown and one photo')
+      T('save', 1, 'Full Details, No Photo', 'Names, date and full event details without a photo', 'View reference', 'https://pin.it/2bU2VkpIO'),
+      T('save', 2, 'Photo-Based', 'A save-the-date design that features a photograph', 'View reference', 'https://pin.it/5KqkmaUMT'),
+      T('save', 3, 'Fun and Creative', 'Playful and unconventional save-the-date styling', 'View reference', 'https://pin.it/1iAkbHODm')
+    ],
+    'Small business': [
+      T('small-business', 1, 'Event Place', 'An inviting event venue or space', 'View reference', 'https://pin.it/3MDCzOOUn'),
+      T('small-business', 2, 'Art Market', 'A creative market for art and handmade goods', 'View reference', 'https://pin.it/5i78eAqzi'),
+      T('small-business', 3, 'Flower Market', 'A floral market or flower-focused event', 'View reference', 'https://pin.it/4H22W6OiK')
     ],
     'Other': [
       T('other', 1, 'Simple Page', 'One scroll with date, place and RSVP'),
@@ -447,8 +464,13 @@ paint();
       t.images.forEach((src, k) => {
         const im = new Image();
         im.loading = 'lazy'; im.decoding = 'async'; im.src = src; im.alt = `${t.title} preview ${k + 1}`;
-        // a missing picture never blocks the form: swap it for a blue tile
-        im.addEventListener('error', () => { const ph = document.createElement('span'); ph.className = 'tph'; im.replaceWith(ph); });
+        // If the file is missing, show the expected path so it is easy to fix.
+        im.addEventListener('error', () => {
+          const ph = document.createElement('span');
+          ph.className = 'image-missing';
+          ph.textContent = `Add image: ${src}`;
+          im.replaceWith(ph);
+        }, { once: true });
         imgs.append(im);
       });
       const title = document.createElement('b'); title.textContent = t.title;
@@ -456,13 +478,18 @@ paint();
       label.append(imgs, title, desc);
 
       const credit = document.createElement('p'); credit.className = 'credit';
-      credit.append('From Pinterest · Credit: ');
       if (isPin(t.creditUrl)) {
         const a = document.createElement('a');
-        a.href = t.creditUrl; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.textContent = t.creditName;
+        a.href = t.creditUrl;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.textContent = 'View reference';
         credit.append(a);
-      } else credit.append(t.creditName);
-      if (t.license) credit.append(` · ${t.license}`);
+      } else if (t.license) {
+        credit.textContent = t.license;
+      } else {
+        credit.remove();
+      }
 
       card.append(input, label, credit);
       grid.append(card);
@@ -648,145 +675,143 @@ paint();
   });
 })();
 
-// inspiration collection window
-/* INSPIRATION COLLECTION MODAL
-   Paste at the very end of script.js. It needs no HTML changes: it makes every card in the
-   "Inspiration for every kind of event" section clickable and builds its own pop-up window.
-
-   TWO WAYS TO SET THE PICTURES
-   A) BY_CATEGORY: one set of 3 pictures for every wedding card, every birthday card, and so on.
-      This is used automatically, even if you rename your cards.
-   B) COLLECTIONS: a set for ONE specific card. The name must match the card heading in
-      index.html exactly (capital letters too). It wins over A.
-
-   P(folder-name, number, short phrase, owner name, Pinterest pin link)
-   - The picture file is assets/inspo/<folder-name>-<number>.jpg  (example: wedding-1.jpg)
-   - Use the REAL owner name and the REAL pin link (https://www.pinterest.com/pin/...).
-     The picture and the credit both open that pin, so visitors can find the original. */
 (() => {
-  const P = (slug, n, caption, creditName = 'Owner name', pinUrl = '') =>
-    ({ src: `assets/inspo/${slug}-${n}.jpg`, caption, creditName, pinUrl });
-  const C = (blurb, pics) => ({ blurb, pics });
+  // The Pinterest URL is the reference link. The image itself must be a local image file.
+  // These three local files were named in the request. Change .jpg if your real extension differs.
+  const CATEGORY_IMAGE = {
+    wedding: '',
+    birthday: '',
+    kpop: '',
+    save: '',
+    business: ''
+  };
+  const item = (title, caption, pinUrl, image, creator = '') =>
+    ({ title, caption, pinUrl, src: image, creator });
+  const group = (blurb, pics) => ({ blurb, pics });
 
-  /* ---------- A) one set per event type (card data-c: wedding, birthday, baby, corporate) ---------- */
   const BY_CATEGORY = {
-    wedding: C('Three easy-to-make styles for a wedding site.', [
-      P('wedding', 1, 'Minimal one-pager: big names, date and one photo'),
-      P('wedding', 2, 'Scrapbook: layered photos and handwritten touches'),
-      P('wedding', 3, 'Dark and elegant: timeline, map and RSVP')]),
-    birthday: C('Three fun, easy-to-make styles for a birthday site.', [
-      P('birthday', 1, 'Bold type: giant headline and live countdown'),
-      P('birthday', 2, 'Photo wall: a grid of memories and one RSVP button'),
-      P('birthday', 3, 'Confetti: bright shapes and big friendly buttons')]),
-    kpop: C('Three fun, easy-to-make styles for a K-pop cupsleeve event.', [
-      P('kpop', 1, 'Photocard collage: cupsleeve designs, the date and the cafe'),
-      P('kpop', 2, 'Cafe menu: event details, freebies list and rules on one page'),
-      P('kpop', 3, 'Neon night: dark glow, live countdown and how to join')]),
-    baby: C('Three gentle, easy-to-make styles for a baby celebration.', [
-      P('baby', 1, 'Soft pastel: one hero photo and calm colors'),
-      P('baby', 2, 'Storybook: story, photos and gift ideas'),
-      P('baby', 3, 'Clean and calm: simple schedule and directions')]),
-    corporate: C('Three clear, easy-to-make styles for a company event.', [
-      P('corporate', 1, 'Agenda first: timeline and speakers up top'),
-      P('corporate', 2, 'Photo banner: big team photo and activities'),
-      P('corporate', 3, 'Dark gala: elegant look, program and dress code')])
+    wedding: group('Explore romantic wedding inspiration featuring cozy polaroid captures, timeless lace touches, and effortless contemporary decor.', [
+      item('Polaroid Theme', 'Personal photos with a nostalgic polaroid feel', 'https://ph.pinterest.com/pin/617415430212900037/', 'assets/wedding-1.jpg'),
+      item('Lace and Vintage', 'Romantic lace details and vintage styling', 'https://pin.it/3iMAYmtGW', 'assets/wedding-2.jpg'),
+      item('Modern and Comfy', 'Natural photos and relaxed everyday vibes', 'https://pin.it/2QqR9yUNA', 'assets/wedding-3.jpg')
+    ]),
+    save: group('Creative save-the-date designs ranging from clean typography layouts to playful photo cards that announce your big day.', [
+      item('Full Details, No Photo', 'Full event details without a photo', 'https://pin.it/2bU2VkpIO', 'assets/save-1.jpg'),
+      item('Photo-Based', 'A save-the-date design with a photograph', 'https://pin.it/5KqkmaUMT', 'assets/save-2.jpg'),
+      item('Fun and Creative', 'Playful and unconventional styling', 'https://pin.it/1iAkbHODm', 'assets/save-3.jpg')
+    ]),
+    birthday: group('Thoughtful birthday concepts ranging from sophisticated formal elegance to relaxed, playful party setups.', [
+      item('Formal Elegance', 'A sophisticated birthday design', 'https://pin.it/2EW9r4Db9', 'assets/birthday-1.jpg'),
+      item('Demure', 'Soft, refined and understated', 'https://pin.it/4sK9QYLCH', 'assets/birthday-2.jpg'),
+      item('House Party', 'A relaxed and playful party vibe', 'https://pin.it/79f0VYz4G', 'assets/birthday-3.jpg')
+    ]),
+    kpop: group('Creative fan event ideas blending soft pastel aesthetics, lively colors, and unique membership themes.', [
+      item('Dreamy', 'Soft colors and an atmospheric fan-event feel', 'https://pin.it/1hISUn6ZP', 'assets/kpop-1.jpg'),
+      item('Membership', 'A membership-inspired fan event', 'https://pin.it/57G6dCf4Z', 'assets/kpop-2.jpg'),
+      item('Colorful', 'Vibrant colors and playful fan-event styling', 'https://pin.it/7qtjVl9H7', 'assets/kpop-3.jpg')
+    ]),
+    business: group('Inspiring concepts for small businesses, from inviting event venues to creative art and flower markets.', [
+      item('Event Place', 'An inviting event venue or space', 'https://pin.it/3MDCzOOUn', 'assets/business-1.jpg'),
+      item('Art Market', 'A creative market for art and handmade goods', 'https://pin.it/5i78eAqzi', 'assets/business-2.jpg'),
+      item('Flower Market', 'A floral market or flower-focused event', 'https://pin.it/4H22W6OiK', 'assets/business-3.jpg')
+    ]),
   };
-  const GENERIC = C('A few easy-to-make styles to get you started.', [
-    P('ideas', 1, 'Clean, simple layout'), P('ideas', 2, 'Details at a glance'), P('ideas', 3, 'Easy RSVP')]);
 
-  /* ---------- B) optional: a set for one specific card ---------- */
   const COLLECTIONS = {
-    // 'Eternal vows': C('Soft, timeless and made for a big day.', [
-    //   P('eternal', 1, 'A big photo opens the page', 'Jane Doe', 'https://www.pinterest.com/pin/1234567890/'),
-    //   P('eternal', 2, 'A simple timeline of the day', 'Jane Doe', 'https://www.pinterest.com/pin/1234567891/'),
-    //   P('eternal', 3, 'Map and RSVP at the end', 'Another Owner', 'https://www.pinterest.com/pin/1234567892/')
-    // ]),
+    'Eternal Vows': BY_CATEGORY.wedding,
+    'Save the Date': BY_CATEGORY.save,
+    'Cheers to Another Year': BY_CATEGORY.birthday,
+    'K-pop Cupsleeve': BY_CATEGORY.kpop,
+    'Small Business': BY_CATEGORY.business
   };
 
-  /* ---------- build the pop-up window once ---------- */
   const dlg = document.createElement('dialog');
   dlg.id = 'inspo';
   dlg.setAttribute('aria-labelledby', 'inspo-title');
   dlg.innerHTML = `
-    <div class="mbox">
+    <div class="mbox inspo-box">
       <button class="mclose" type="button" data-close aria-label="Close">×</button>
       <h2 id="inspo-title"></h2>
       <p class="ilead"></p>
-      <p class="pinnote"><span class="pinb">Pinterest</span><span>These pictures are from Pinterest. All credit goes to their owners.</span></p>
-      <p class="stylenote">Please note that the inspiration collection demonstrates the structure, layout, and overall flow of the website. The color palette and visual elements will be customized to seamlessly match your unique event theme.</p>
-      <div class="igrid"></div>
-      <p class="ifoot">Shown as inspiration only. Tap a picture or a name to visit the original pin.</p>
+      <div class="igrid"></div><br>
+      <p class="mnote">
+            Please note that the inspiration collection demonstrates the structure, layout, and overall flow of the website. The color palette and visual elements will be customized to seamlessly match your unique event theme. 
+These pictures are from Pinterest. All credit goes to their owners.
+          </p> <br>
       <button class="btn" type="button" data-open-inquiry>Plan something like this</button>
     </div>`;
   document.body.append(dlg);
   const grid = dlg.querySelector('.igrid');
-
-  // only real Pinterest links become clickable
   const isPin = u => /^https:\/\/([a-z0-9-]+\.)?(pinterest\.[a-z.]+|pin\.it)\//i.test(u);
 
   function openCollection(title, cat) {
-    const col = COLLECTIONS[title] || BY_CATEGORY[cat] || GENERIC;
+    const col = COLLECTIONS[title] || BY_CATEGORY[cat] || BY_CATEGORY.wedding;
     dlg.querySelector('#inspo-title').textContent = title;
     dlg.querySelector('.ilead').textContent = col.blurb;
     grid.replaceChildren();
+
     col.pics.forEach((p, i) => {
       const fig = document.createElement('figure');
-
       const img = new Image();
-      img.className = 'ipic'; img.loading = 'lazy'; img.decoding = 'async';
-      img.src = p.src; img.alt = `${title} idea ${i + 1}: ${p.caption}`;
-      img.addEventListener('error', () => {           // a missing picture never breaks the window
-        const tile = document.createElement('span');
-        tile.className = 'ipic tph'; tile.textContent = 'Picture coming soon';
-        img.replaceWith(tile);
-      });
-      let pic = img;
-      if (isPin(p.pinUrl)) {                          // the picture itself opens the original pin
-        pic = document.createElement('a');
-        pic.className = 'ipin'; pic.href = p.pinUrl; pic.target = '_blank'; pic.rel = 'noopener noreferrer';
-        pic.title = 'View the original pin on Pinterest';
-        pic.append(img);
-      }
+      img.className = 'ipic';
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      img.src = p.src;
+      img.alt = `${p.title}: ${p.caption}`;
+      img.addEventListener('error', () => {
+        const missing = document.createElement('span');
+        missing.className = 'image-missing inspo-missing';
+        missing.textContent = `Add image file: ${p.src}`;
+        img.replaceWith(missing);
+      }, { once: true });
 
       const cap = document.createElement('figcaption');
-      const phrase = document.createElement('b'); phrase.textContent = p.caption;
-      cap.append(phrase);
+      const titleText = document.createElement('b');
+      titleText.textContent = p.title;
+      cap.append(titleText);
 
-      const credit = document.createElement('p'); credit.className = 'icredit';
-      const badge = document.createElement('span'); badge.className = 'pinb'; badge.textContent = 'Pinterest';
-      credit.append(badge, 'Credit: ');
       if (isPin(p.pinUrl)) {
         const a = document.createElement('a');
-        a.href = p.pinUrl; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.textContent = p.creditName;
-        credit.append(a);
-      } else credit.append(p.creditName);
+        a.className = 'reference-link';
+        a.href = p.pinUrl;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.textContent = 'View reference';
+        cap.append(document.createTextNode(' · '), a);
+      }
 
-      fig.append(pic, cap, credit);
+      // Creator names are omitted unless verified; the provided pin remains the source link.
+      fig.append(img, cap);
       grid.append(fig);
     });
     dlg.scrollTop = 0;
     dlg.showModal();
   }
 
-  // close on X, backdrop click, or when "Plan something like this" opens the booking window
   dlg.addEventListener('click', e => {
     if (e.target === dlg || e.target.closest('[data-close], [data-open-inquiry]')) dlg.close();
   });
 
-  /* ---------- make every card clickable ---------- */
   document.querySelectorAll('.tpl .card').forEach(card => {
-    const title = card.querySelector('h3').textContent.trim();
+    const heading = card.querySelector('h3');
+    if (!heading) return;
+    const title = heading.textContent.trim();
     const cat = card.dataset.c;
     card.tabIndex = 0;
     card.setAttribute('role', 'button');
     card.setAttribute('aria-haspopup', 'dialog');
     card.setAttribute('aria-label', `See the ${title} inspiration collection`);
     const more = document.createElement('span');
-    more.className = 'btn more'; more.setAttribute('aria-hidden', 'true'); more.textContent = 'See collection';
+    more.className = 'btn more';
+    more.setAttribute('aria-hidden', 'true');
+    more.textContent = 'See collection';
     card.querySelector('.t').append(more);
     card.addEventListener('click', () => openCollection(title, cat));
     card.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openCollection(title, cat); }
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openCollection(title, cat);
+      }
     });
   });
 })();
