@@ -257,19 +257,17 @@ paint();
      ===================================================================== */
   // Local preview images. Put these files in the project's assets folder.
   // If your files are PNG/WebP instead of JPG, update the extensions here.
-  const CATEGORY_IMAGE = {
-    wedding: 'assets/wedding-1.jpg',
-    birthday: 'assets/bday-1.jpg',
-    kpop: 'assets/kpop-1.jpg',
-    save: 'assets/wedding-1.jpg',
-    'small-business': 'assets/small-business-1.jpg'
+  const CATEGORY_IMAGES = {
+    wedding: ['assets/wedding-1.jpg', 'assets/wedding-2.jpg', 'assets/wedding-3.jpg'],
+    birthday: ['assets/birthday-1.jpg', 'assets/birthday-2.jpg', 'assets/birthday-3.jpg'],
+    kpop: ['assets/kpop-1.jpg', 'assets/kpop-2.jpg', 'assets/kpop-3.jpg'],
+    save: ['assets/save-1.jpg', 'assets/save-2.jpg', 'assets/save-3.jpg'],
+    'small-business': ['assets/business-1.jpg', 'assets/business-2.jpg', 'assets/business-3.jpg'],
+    business: ['assets/business-1.jpg']
   };
   const T = (slug, n, title, description, creditName = 'View reference', creditUrl = '', license = '') => ({
     title, description,
-    // Reuse the provided category preview when available; other categories use the existing naming convention.
-    images: CATEGORY_IMAGE[slug]
-      ? [CATEGORY_IMAGE[slug], CATEGORY_IMAGE[slug], CATEGORY_IMAGE[slug]]
-      : ['a', 'b', 'c'].map(x => `assets/themes/${slug}-${n}-${x}.jpg`),
+    image: CATEGORY_IMAGES[slug]?.[n - 1] || 'assets/business-1.jpg',
     creditName, creditUrl, license
   });
   const isPin = u => /^https:\/\/([a-z0-9-]+\.)?(pinterest\.[a-z.]+|pin\.it)\//i.test(u);   // only real Pinterest links become clickable
@@ -315,9 +313,7 @@ paint();
       T('small-business', 3, 'Flower Market', 'A floral market or flower-focused event', 'View reference', 'https://pin.it/4H22W6OiK')
     ],
     'Other': [
-      T('other', 1, 'Simple Page', 'One scroll with date, place and RSVP'),
-      T('other', 2, 'Photo First', 'Big photos with details underneath'),
-      T('other', 3, 'Timeline', 'Schedule-focused layout with map')
+      T('business', 1, 'Business', 'A flexible starting point for your event')
     ]
   };
 
@@ -424,7 +420,7 @@ paint();
     q('.pbar i').style.width = (n * 50) + '%';
     form.querySelectorAll('.imsg').forEach(m => { m.textContent = ''; });
     dlg.scrollTop = 0;
-    const first = n === 1 ? el.name : steps[1].querySelector('input');
+    const first = n === 1 ? el.name : steps[1].querySelector('.themes legend');
     if (first) first.focus();
   }
 
@@ -433,6 +429,7 @@ paint();
       [el.name, !!el.name.value.trim(), 'Please add your name.'],
       [el.email, /^\S+@\S+\.\S+$/.test(el.email.value.trim()), 'Please add a valid email.'],
       [el.handle, !!el.handle.value.trim(), 'Add your Instagram or Facebook so I can message you.'],
+      ...(el.eventType.value === 'Other' ? [[el.eventKind, !!el.eventKind.value.trim(), 'Tell me what kind of event you have in mind.']] : []),
       [el.eventDate, dateOk(el.eventDate.value), `Pick a date from today to December 31, ${MAX_YEAR}.`]
     ];
     checks.forEach(([f, ok]) => f.setAttribute('aria-invalid', String(!ok)));
@@ -453,6 +450,7 @@ paint();
     q('.evname').textContent = type.toLowerCase();
     const grid = q('.tgrid');
     grid.replaceChildren();
+    grid.classList.toggle('single-theme', list.length === 1);
     list.forEach((t, i) => {
       const id = `theme-${i}`;
       const card = document.createElement('div'); card.className = 'tcard';
@@ -461,18 +459,15 @@ paint();
       const label = document.createElement('label'); label.className = 'tpick'; label.htmlFor = id;
 
       const imgs = document.createElement('div'); imgs.className = 'timgs';
-      t.images.forEach((src, k) => {
-        const im = new Image();
-        im.loading = 'lazy'; im.decoding = 'async'; im.src = src; im.alt = `${t.title} preview ${k + 1}`;
-        // If the file is missing, show the expected path so it is easy to fix.
-        im.addEventListener('error', () => {
-          const ph = document.createElement('span');
-          ph.className = 'image-missing';
-          ph.textContent = `Add image: ${src}`;
-          im.replaceWith(ph);
-        }, { once: true });
-        imgs.append(im);
-      });
+      const im = new Image();
+      im.loading = 'lazy'; im.decoding = 'async'; im.src = t.image; im.alt = `${t.title} preview`;
+      im.addEventListener('error', () => {
+        const ph = document.createElement('span');
+        ph.className = 'image-missing';
+        ph.textContent = `Add image: ${t.image}`;
+        im.replaceWith(ph);
+      }, { once: true });
+      imgs.append(im);
       const title = document.createElement('b'); title.textContent = t.title;
       const desc = document.createElement('span'); desc.className = 'd'; desc.textContent = t.description;
       label.append(imgs, title, desc);
@@ -529,6 +524,12 @@ paint();
   form.addEventListener('change', e => {
     if (e.target.name === 'features') { syncSurvey(); syncOther(); }
     if (e.target.name === 'theme') q('.inspo').hidden = e.target.value !== 'Own inspiration';
+    if (e.target.name === 'eventType') {
+      const isOther = e.target.value === 'Other';
+      q('.event-kind').hidden = !isOther;
+      el.eventKind.required = isOther;
+      if (!isOther) el.eventKind.removeAttribute('aria-invalid');
+    }
   });
 
   /* ----- inspiration files (PNG, JPG, PDF) ----- */
@@ -636,7 +637,7 @@ paint();
       type: 'inquiry',
       name: val('name'), email: val('email'),
       platform: el.platform.value, handle: val('handle'),
-      eventType: type, package: el.package.value, eventDate: el.eventDate.value,
+      eventType: type, eventKind: type === 'Other' ? val('eventKind') : '', package: el.package.value, eventDate: el.eventDate.value,
       theme: chosen || 'Not chosen',
       themeCredit: t ? `${t.creditName}${t.creditUrl ? ' (' + t.creditUrl + ')' : ''}${t.license ? ' · ' + t.license : ''}` : '',
       features: [...form.querySelectorAll('[name=features]:checked')].map(i => i.value).join(', '),
@@ -661,6 +662,8 @@ paint();
       el.eventDate.value = '';                       // hidden inputs are not cleared by reset()
       files = []; renderFiles();
       renderedType = ''; renderedPkg = '';
+      q('.event-kind').hidden = el.eventType.value !== 'Other';
+      el.eventKind.required = el.eventType.value === 'Other';
       q('.inspo').hidden = true; q('.dnote').hidden = true;
       updatePlatform();
       goStep(1);

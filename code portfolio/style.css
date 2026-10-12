@@ -1676,3 +1676,331 @@ dialog#inspo h2 {
         .igrid .ipic, .inspo-missing { aspect-ratio: 4 / 3; }
         .timgs img { height: 95px; }
       }
+
+/* Floating scrapbook stickers */
+.st,
+.fstk,
+.modal-sticker,
+.mstk {
+  pointer-events: none;
+  animation: sticker-drift 5.4s ease-in-out infinite;
+}
+
+.hero .st {
+  font-size: clamp(52px, 6vw, 82px);
+}
+
+.hero .st:nth-of-type(2n) {
+  animation-duration: 6.8s;
+}
+
+.hero .st:nth-of-type(3n) {
+  animation-duration: 4.7s;
+}
+
+.fstk:nth-of-type(2n) {
+  animation-duration: 6.3s;
+}
+
+.fstk:nth-of-type(3n) {
+  animation-duration: 4.6s;
+}
+
+@keyframes sticker-drift {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-3deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(4deg);
+  }
+}
+
+.mbox {
+  isolation: isolate;
+}
+
+.modal-sticker {
+  position: absolute;
+  z-index: 0;
+  width: 68px;
+  height: 68px;
+  opacity: 0.9;
+}
+
+.modal-sticker-one {
+  top: 118px;
+  right: 4px;
+  animation-delay: -1.4s;
+}
+
+.modal-sticker-two {
+  bottom: 92px;
+  left: 4px;
+  width: 78px;
+  height: 78px;
+  animation-delay: -3.2s;
+}
+
+.mstk {
+  z-index: 1;
+}
+
+#inqform,
+.done {
+  position: relative;
+  z-index: 1;
+}
+
+.mclose {
+  z-index: 1;
+}
+
+/* One framed image per theme */
+.tgrid {
+  align-items: start;
+}
+
+.tgrid.single-theme {
+  grid-template-columns: minmax(220px, 280px);
+  justify-content: center;
+}
+
+.tcard {
+  min-width: 0;
+}
+
+.tpick {
+  padding: 10px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  transition:
+    transform 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.tpick:hover {
+  transform: translateY(-5px) rotate(2deg);
+}
+
+.timgs {
+  display: block;
+  aspect-ratio: auto;
+  padding: 8px 8px 26px;
+  background: #fff;
+  border: 1px solid #eadfe0;
+  box-shadow: 0 5px 12px #1c1c1c26;
+  transform: rotate(-2deg);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.tcard:nth-child(even) .timgs {
+  transform: rotate(2deg);
+}
+
+.tpick:hover .timgs {
+  transform: rotate(0deg) scale(1.025);
+  box-shadow: 0 10px 18px #1c1c1c2b;
+}
+
+.timgs > :first-child {
+  grid-row: auto;
+}
+
+.timgs img,
+.timgs .tph,
+.timgs .image-missing {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 4 / 5;
+  border-radius: 0;
+  object-fit: cover;
+}
+
+.tcard input:checked + .tpick {
+  border-color: var(--pink);
+  background: transparent;
+  box-shadow: 0 0 0 2px var(--pink);
+}
+
+.tcard input:checked + .tpick::after {
+  top: 2px;
+  right: 2px;
+  width: 30px;
+  height: 30px;
+  border: 1.5px solid var(--ink);
+  border-radius: 50%;
+  background: var(--pink);
+  color: var(--ink);
+  box-shadow: 2px 2px 0 #1c1c1c55;
+  transform: rotate(10deg);
+}
+
+.tpick b {
+  font-family: var(--serif);
+  font-weight: 400;
+}
+
+/* Scrapbook-inspired inspiration cards */
+.tpl .card {
+  position: relative;
+  overflow: visible;
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  background: var(--cream);
+  box-shadow: 4px 5px 0 #1c1c1c26;
+  transform: rotate(-1.5deg);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.tpl .card:nth-child(even) {
+  transform: rotate(1.8deg);
+}
+
+.tpl .card:hover,
+.tpl .card:focus-visible {
+  z-index: 1;
+  transform: translateY(-6px) rotate(0deg);
+  box-shadow: 7px 9px 0 #1c1c1c2b;
+}
+
+.tpl .card::before,
+.igrid figure::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: -9px;
+  left: 50%;
+  width: 54px;
+  height: 18px;
+  background: #f9b8cfb8;
+  border-inline: 1px solid #1c1c1c28;
+  transform: translateX(-50%) rotate(-4deg);
+}
+
+.tpl .card::after,
+.igrid figure::after {
+  content: "✦";
+  position: absolute;
+  z-index: 3;
+  top: -12px;
+  right: -9px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid var(--ink);
+  border-radius: 50%;
+  background: var(--sage);
+  font: 500 20px/1 var(--serif);
+  transform: rotate(12deg);
+}
+
+.tpl .card .ph {
+  height: 150px;
+  border-bottom: 1px dashed var(--ink);
+  background-color: #fffdf8;
+  background-image:
+    linear-gradient(90deg, #f9b8cf42 50%, transparent 50%),
+    linear-gradient(#b9dfe642 50%, transparent 50%);
+  background-size: 18px 18px;
+  padding: 8px;
+}
+
+.tpl .card .ph img.template-preview {
+  min-height: 0;
+  border: 5px solid #fff;
+  box-shadow: 0 2px 6px #1c1c1c2b;
+}
+
+.tpl .card .t {
+  padding: 13px 12px 16px;
+}
+
+.tpl .card h3 {
+  font: 400 19px/1.15 var(--serif);
+}
+
+.igrid {
+  padding: 8px 5px 12px;
+}
+
+.igrid figure {
+  position: relative;
+  min-width: 0;
+  padding: 12px;
+  border: 2px solid var(--ink);
+  background-color: #fffdf8;
+  background-image:
+    linear-gradient(90deg, #b9dfe655 50%, transparent 50%),
+    linear-gradient(#f9b8cf44 50%, transparent 50%);
+  background-size: 16px 16px;
+  box-shadow: 4px 5px 0 #1c1c1c28;
+  transform: rotate(-1.4deg);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.igrid figure:nth-child(even) {
+  transform: rotate(1.6deg);
+}
+
+.igrid figure:hover {
+  z-index: 1;
+  transform: translateY(-5px) rotate(0deg);
+  box-shadow: 7px 9px 0 #1c1c1c2b;
+}
+
+.igrid .ipic {
+  border: 7px solid #fff;
+  border-radius: 2px;
+  box-shadow: 0 2px 7px #1c1c1c30;
+}
+
+.igrid .inspo-missing {
+  border: 7px solid #fff;
+}
+
+.igrid figcaption {
+  margin: 10px 2px 2px;
+  font: 400 13px/1.5 var(--sans);
+}
+
+.igrid figcaption b {
+  font: 400 19px/1.2 var(--serif);
+}
+
+@media (max-width: 640px) {
+  .hero .st {
+    font-size: 52px;
+  }
+
+  .modal-sticker {
+    width: 52px;
+    height: 52px;
+    opacity: 0.65;
+  }
+
+  .igrid figure {
+    max-width: 420px;
+    width: 100%;
+    margin-inline: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .st,
+  .fstk,
+  .modal-sticker,
+  .mstk,
+  .tpick,
+  .timgs,
+  .tpl .card,
+  .igrid figure {
+    animation: none !important;
+    transition: none !important;
+  }
+}
