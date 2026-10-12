@@ -1620,3 +1620,26 @@ dialog#inspo h2 {
     aspect-ratio: 3/2;
   }
 }
+
+/* ===== inspiration collection: style note and pin-linked pictures ===== */
+.stylenote {
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  background: var(--blue);
+  border: 1.5px solid var(--ink);
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.ipin {
+  display: block;
+  border-radius: 12px;
+  transition: transform 0.15s;
+}
+.ipin:hover {
+  transform: translateY(-3px);
+}
+.ipin:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
