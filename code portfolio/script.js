@@ -324,6 +324,11 @@ paint();
     'Premium': ['Everything included in Full Invitation', 'Dark & Light Mode Toggle', 'Background music and song requests', 'Automated RSVP email confirmation']
   };
   const SURVEY_ITEMS = ['Custom guest survey questions', 'Everything included in Full Invitation'];
+  const PRICE_TIERS = {
+    'Save the Date': { normal: 799, launch: 499 },
+    'Full Invitation': { normal: 1299, launch: 999 },
+    Premium: { normal: 1999, launch: 1799 }
+  };
 
   /* Booking window and upload limits: edit freely */
   const MIN_YEAR = 2026, MAX_YEAR = 2027;       // only dates in these years can be booked
@@ -335,11 +340,10 @@ paint();
   const form = document.getElementById('inqform');
   const el = form.elements;
   const q = s => form.querySelector(s);
-  const steps = [...form.querySelectorAll('.step')];
+  const steps = [...form.querySelectorAll('.step')].sort((a, b) => Number(a.dataset.step) - Number(b.dataset.step));
   const done = dlg.querySelector('.done');
-  const send = q('.isend');
   const url = typeof APPS_SCRIPT_URL !== 'undefined' ? APPS_SCRIPT_URL : '';
-  const TITLES = ['About your event', 'Pick your look'];
+  const TITLES = ['Terms and conditions', 'About your event', 'Pick your look', 'Online payment', 'Receipt'];
   let step = 1, busy = false, renderedType = '', renderedPkg = '';
 
   /* ----- dates ----- */
@@ -417,10 +421,14 @@ paint();
     steps.forEach((s, i) => { s.hidden = i !== n - 1; });
     q('.sn').textContent = n;
     q('.stname').textContent = TITLES[n - 1];
-    q('.pbar i').style.width = (n * 50) + '%';
+    q('.pbar i').style.width = (n * 20) + '%';
     form.querySelectorAll('.imsg').forEach(m => { m.textContent = ''; });
     dlg.scrollTop = 0;
-    const first = n === 1 ? el.name : steps[1].querySelector('.themes legend');
+    const first = n === 1 ? el.termsAccepted
+      : n === 2 ? el.name
+      : n === 3 ? steps[2].querySelector('.themes legend')
+      : n === 4 ? q('#payment-title')
+      : q('.receipt-title');
     if (first) first.focus();
   }
 
@@ -433,10 +441,11 @@ paint();
       [el.eventDate, dateOk(el.eventDate.value), `Pick a date from today to December 31, ${MAX_YEAR}.`]
     ];
     checks.forEach(([f, ok]) => f.setAttribute('aria-invalid', String(!ok)));
-    calBox.classList.toggle('bad', !checks[3][1]);
+    const dateCheck = checks.find(([field]) => field === el.eventDate);
+    calBox.classList.toggle('bad', !dateCheck[1]);
     const bad = checks.find(c => !c[1]);
     if (bad) {
-      steps[0].querySelector('.imsg').textContent = bad[2];
+      steps[1].querySelector('.imsg').textContent = bad[2];
       if (bad[0] === el.eventDate) calFocus(); else bad[0].focus();
       return false;
     }
@@ -533,11 +542,11 @@ paint();
   });
 
   /* ----- inspiration files (PNG, JPG, PDF) ----- */
-  let files = [];
+  let files = [], paymentProof = null, paymentPreviewUrl = '', orderId = '';
   const isPdf = f => f.type === 'application/pdf' || /\.pdf$/i.test(f.name);
   const isImg = f => /^image\/(png|jpeg)$/.test(f.type) || /\.(png|jpe?g)$/i.test(f.name);
   const kb = n => n > 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB';
-  const fmsg = t => { steps[1].querySelector('.imsg').textContent = t; };
+  const fmsg = t => { steps[2].querySelector('.imsg').textContent = t; };
 
   function renderFiles() {
     const ul = q('.ffiles');
@@ -584,16 +593,208 @@ paint();
     ? {name: f.name, type: 'application/pdf', data: await readB64(f)}
     : {name: f.name.replace(/\.[^.]+$/, '') + '.jpg', type: 'image/jpeg', data: await imgB64(f)}));
 
+  const formatMoney = (amount, decimals = 0) => `₱${Number(amount).toLocaleString('en-PH', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals
+  })}`;
+  const selectedTier = () => PRICE_TIERS[el.package.value] ? el.package.value : 'Full Invitation';
+  const currentPrice = () => PRICE_TIERS[selectedTier()];
+  function updatePaymentAmount() {
+    q('#amount-due').textContent = formatMoney(currentPrice().launch / 2, 2);
+  }
+
+  function validateTheme() {
+    const selected = form.querySelector('[name="theme"]:checked');
+    if (selected) return true;
+    steps[2].querySelector('.imsg').textContent = 'Choose a theme or one of the options below.';
+    q('.themes legend').focus();
+    return false;
+  }
+
+  const proofInput = q('.payment-proof');
+  const proofPreview = q('.proof-preview');
+  q('.payment-qr').addEventListener('error', event => {
+    event.currentTarget.hidden = true;
+    q('.qr-placeholder').hidden = false;
+  }, { once: true });
+  function clearProofPreview() {
+    if (paymentPreviewUrl) URL.revokeObjectURL(paymentPreviewUrl);
+    paymentPreviewUrl = '';
+    q('.proof-image').removeAttribute('src');
+    q('.proof-pdf').removeAttribute('src');
+    q('.proof-pdf').hidden = true;
+    q('.proof-image').hidden = false;
+    q('.proof-filename').textContent = '';
+    proofPreview.hidden = true;
+  }
+
+  proofInput.addEventListener('change', () => {
+    const file = proofInput.files[0];
+    paymentProof = null;
+    clearProofPreview();
+    if (!file) return;
+    if (!isPdf(file) && !isImg(file)) {
+      steps[3].querySelector('.imsg').textContent = 'Upload a PNG, JPG or PDF payment proof.';
+      proofInput.value = '';
+      return;
+    }
+    if (file.size > 5 * 1048576) {
+      steps[3].querySelector('.imsg').textContent = 'Payment proof must be 5 MB or smaller.';
+      proofInput.value = '';
+      return;
+    }
+    paymentProof = file;
+    paymentPreviewUrl = URL.createObjectURL(file);
+    q('.proof-filename').textContent = file.name;
+    if (isPdf(file)) {
+      q('.proof-pdf').src = paymentPreviewUrl;
+      q('.proof-pdf').hidden = false;
+      q('.proof-image').hidden = true;
+    } else {
+      q('.proof-image').src = paymentPreviewUrl;
+    }
+    proofPreview.hidden = false;
+    steps[3].querySelector('.imsg').textContent = '';
+  });
+
+  el.termsAccepted.addEventListener('change', () => {
+    q('.terms-next').disabled = !el.termsAccepted.checked;
+    steps[0].querySelector('.imsg').textContent = '';
+  });
+
+  function validateTerms() {
+    if (el.termsAccepted.checked) return true;
+    steps[0].querySelector('.imsg').textContent = 'Please read and agree to the terms before continuing.';
+    el.termsAccepted.focus();
+    return false;
+  }
+
+  function validatePayment() {
+    const message = steps[3].querySelector('.imsg');
+    if (!el.termsAccepted.checked) {
+      message.textContent = 'Please agree to the terms before continuing.';
+      el.termsAccepted.focus();
+      return false;
+    }
+    if (!paymentProof) {
+      message.textContent = 'Upload your payment proof before continuing.';
+      proofInput.focus();
+      return false;
+    }
+    return true;
+  }
+
+  const makeOrderId = () => {
+    const now = new Date();
+    const random = String(Math.floor(10000 + Math.random() * 90000));
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${random}`;
+  };
+
+  function renderReceipt(data, tier, id) {
+    const price = PRICE_TIERS[tier];
+    const set = (key, value) => {
+      q(`[data-receipt="${key}"]`).textContent = value;
+    };
+    set('orderId', id);
+    set('date', new Date().toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' }));
+    set('customer', data.name);
+    set('contact', `${data.email} · ${data.platform}: ${data.handle}`);
+    set('event', data.eventType === 'Other' ? `Other: ${data.eventKind}` : data.eventType);
+    set('theme', data.theme || 'Not chosen');
+    set('package', data.package);
+    set('normalPrice', formatMoney(price.normal));
+    set('launchPrice', formatMoney(price.launch));
+    set('paid', formatMoney(price.launch / 2, 2));
+    set('balance', formatMoney(price.launch / 2, 2));
+    set('proof', isPdf(paymentProof) ? 'PDF uploaded' : 'Screenshot uploaded');
+  }
+
+  const packPaymentProof = async () => isPdf(paymentProof)
+    ? { name: paymentProof.name, type: 'application/pdf', data: await readB64(paymentProof) }
+    : { name: paymentProof.name.replace(/\.[^.]+$/, '') + '.jpg', type: 'image/jpeg', data: await imgB64(paymentProof) };
+
+  async function confirmOrder() {
+    if (busy || !validatePayment()) return;
+    const message = steps[3].querySelector('.imsg');
+    const confirmButton = q('.confirm-order');
+    const tier = selectedTier();
+    const price = PRICE_TIERS[tier];
+    const packageLabel = el.package.value === 'Not sure yet' ? 'Full Invitation (estimate)' : el.package.value;
+    orderId ||= makeOrderId();
+    const data = {
+      type: 'inquiry',
+      orderId,
+      orderDate: new Date().toISOString(),
+      name: el.name.value.trim(),
+      email: el.email.value.trim(),
+      platform: el.platform.value,
+      handle: el.handle.value.trim(),
+      eventType: el.eventType.value,
+      eventKind: el.eventType.value === 'Other' ? el.eventKind.value.trim() : '',
+      package: packageLabel,
+      eventDate: el.eventDate.value,
+      theme: form.querySelector('[name="theme"]:checked')?.value || 'Not chosen',
+      features: [...form.querySelectorAll('[name=features]:checked')].map(input => input.value).join(', '),
+      survey: q('.survey').hidden ? '' : el.survey.value.trim(),
+      inspoLink: form.querySelector('[name="theme"]:checked')?.value === 'Own inspiration' ? el.inspoLink.value.trim() : '',
+      notes: el.notes.value.trim(),
+      extras: q('.other').hidden ? '' : el.extras.value.trim(),
+      termsAccepted: true,
+      normalPrice: price.normal,
+      launchPrice: price.launch,
+      amountPaid: price.launch / 2,
+      balanceDue: price.launch / 2
+    };
+    busy = true;
+    confirmButton.disabled = true;
+    confirmButton.textContent = 'Confirming...';
+    message.textContent = '';
+    try {
+      data.inspoFiles = data.theme === 'Own inspiration' && files.length ? await packFiles() : [];
+      data.paymentProof = await packPaymentProof();
+      if (JSON.stringify(data).length > 9e6) throw new Error('toobig');
+      if (url) {
+        await fetch(url, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify(data)
+        });
+      }
+      renderReceipt(data, tier, orderId);
+      q('.receipt-status').textContent = url
+        ? 'Order confirmed. Your receipt is ready to download.'
+        : 'Demo mode: your order receipt is ready to download.';
+      goStep(4);
+    } catch (error) {
+      message.textContent = error.message === 'toobig'
+        ? 'The uploaded files are too large together. Try a smaller payment proof.'
+        : 'That did not send. Check your connection and try again.';
+    } finally {
+      busy = false;
+      confirmButton.disabled = !el.termsAccepted.checked;
+      confirmButton.textContent = 'Confirm order';
+    }
+  }
+
   function next() {
-    if (!validate1()) return;
-    if (renderedType !== el.eventType.value) { renderThemes(); renderedType = el.eventType.value; }
-    if (renderedPkg !== el.package.value) { renderFeatures(); renderedPkg = el.package.value; }
-    goStep(2);
+    if (step === 1) {
+      if (!validate1()) return;
+      if (renderedType !== el.eventType.value) { renderThemes(); renderedType = el.eventType.value; }
+      if (renderedPkg !== el.package.value) { renderFeatures(); renderedPkg = el.package.value; }
+      goStep(2);
+    } else if (step === 2) {
+      if (!validateTheme()) return;
+      updatePaymentAmount();
+      goStep(3);
+    } else if (step === 3) {
+      confirmOrder();
+    }
   }
 
   form.addEventListener('click', e => {
     if (e.target.closest('[data-next]')) next();
-    else if (e.target.closest('[data-back]')) goStep(1);
+    else if (e.target.closest('[data-back]')) goStep(step - 1);
   });
 
   /* ----- open / close ----- */
@@ -620,61 +821,124 @@ paint();
   });
   dlg.addEventListener('click', e => { if (e.target === dlg || e.target.closest('[data-close]')) dlg.close(); });
 
-  /* ----- one single submit, at the very end ----- */
-  form.addEventListener('submit', async e => {
-    e.preventDefault();
-    if (step === 1) { next(); return; }                         // Enter key on step 1 = Next
-    if (busy) return;
-    if (el.website.value) return;                               // honeypot
-    const msg = steps[1].querySelector('.imsg');
-    const val = n => el[n].value.trim();
+  function resetOrderState() {
+    form.reset();
+    orderId = '';
+    paymentProof = null;
+    clearProofPreview();
+    files = [];
+    renderFiles();
+    renderedType = '';
+    renderedPkg = '';
+    el.eventDate.value = '';
+    el.eventKind.required = false;
+    q('.event-kind').hidden = true;
+    q('.inspo').hidden = true;
+    q('.dnote').hidden = true;
+    q('.receipt-status').textContent = '';
+    q('.confirm-order').disabled = true;
+    updatePlatform();
+    goStep(1);
+  }
 
-    const type = el.eventType.value;
-    const pick = form.querySelector('[name=theme]:checked');
-    const chosen = pick ? pick.value : '';
-    const t = (THEMES[type] || THEMES['Other']).find(x => x.title === chosen);
-    const d = {
-      type: 'inquiry',
-      name: val('name'), email: val('email'),
-      platform: el.platform.value, handle: val('handle'),
-      eventType: type, eventKind: type === 'Other' ? val('eventKind') : '', package: el.package.value, eventDate: el.eventDate.value,
-      theme: chosen || 'Not chosen',
-      themeCredit: t ? `${t.creditName}${t.creditUrl ? ' (' + t.creditUrl + ')' : ''}${t.license ? ' · ' + t.license : ''}` : '',
-      features: [...form.querySelectorAll('[name=features]:checked')].map(i => i.value).join(', '),
-      survey: q('.survey').hidden ? '' : val('survey'),
-      inspoLink: chosen === 'Own inspiration' ? val('inspoLink') : '',
-      notes: val('notes'), extras: q('.other').hidden ? '' : val('extras')
-    };
-
-    const withFiles = chosen === 'Own inspiration' && files.length > 0;
-    busy = true; send.disabled = true; send.textContent = withFiles ? 'Uploading…' : 'Sending…'; msg.textContent = '';
-    try {
-      d.inspoFiles = withFiles ? await packFiles() : [];
-      if (JSON.stringify(d).length > 9e6) throw new Error('toobig');
-      if (url) await fetch(url, {method: 'POST', mode: 'no-cors', headers: {'Content-Type': 'text/plain'}, body: JSON.stringify(d)});
-      else await new Promise(r => setTimeout(r, 700));
-      // each part of the thank-you message is optional, so editing that text can never break sending
-      const say = (sel, text) => { const n = done.querySelector(sel); if (n) n.textContent = text; };
-      say('.who', d.name.split(' ')[0]);
-      say('.where', `${d.platform} (${d.handle})`);
-      const demo = done.querySelector('.demo'); if (demo) demo.hidden = !!url;
-      form.reset();
-      el.eventDate.value = '';                       // hidden inputs are not cleared by reset()
-      files = []; renderFiles();
-      renderedType = ''; renderedPkg = '';
-      q('.event-kind').hidden = el.eventType.value !== 'Other';
-      el.eventKind.required = el.eventType.value === 'Other';
-      q('.inspo').hidden = true; q('.dnote').hidden = true;
-      updatePlatform();
-      goStep(1);
-      form.hidden = true; done.hidden = false;
-      done.querySelector('h2').focus();
-    } catch (err) {
-      msg.textContent = err.message === 'toobig' ? 'Those files are too big together. Try fewer or smaller files.'
-        : err.message === 'badfile' ? 'One of the pictures could not be read. Try a different file.'
-        : 'That did not send. Check your connection and try again.';
+  q('#download-receipt').addEventListener('click', async event => {
+    const button = event.currentTarget;
+    const status = q('.receipt-status');
+    if (!window.jspdf?.jsPDF) {
+      status.textContent = 'The PDF tools are unavailable. Check your connection and try again.';
+      return;
     }
-    busy = false; send.disabled = false; send.textContent = 'Send my details';
+    button.disabled = true;
+    button.textContent = 'Preparing PDF...';
+    try {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [154, 220] });
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const receiptValue = key => q(`[data-receipt="${key}"]`).textContent;
+      const rows = [
+        ['Order ID', receiptValue('orderId')],
+        ['Date', receiptValue('date')],
+        ['Customer', receiptValue('customer')],
+        ['Contact', receiptValue('contact')],
+        ['Event', receiptValue('event')],
+        ['Theme', receiptValue('theme')],
+        ['Package', receiptValue('package')]
+      ];
+      const amountRows = [
+        ['Normal price', receiptValue('normalPrice')],
+        ['Launch price', receiptValue('launchPrice')],
+        ['50% paid', receiptValue('paid')],
+        ['50% balance', receiptValue('balance')]
+      ];
+      const pdfText = text => text.replaceAll('₱', 'PHP ');
+      pdf.setFillColor(255, 253, 248);
+      pdf.rect(4, 4, pageWidth - 8, 212, 'F');
+      pdf.setDrawColor(213, 208, 197);
+      pdf.rect(4, 4, pageWidth - 8, 212);
+      pdf.setFillColor(249, 184, 207);
+      pdf.circle(pageWidth - 14, 13, 5, 'F');
+      pdf.setFillColor(185, 223, 230);
+      pdf.circle(12, 202, 5, 'F');
+      pdf.setTextColor(51, 47, 42);
+      pdf.setFont('courier', 'bold');
+      pdf.setFontSize(17);
+      pdf.text('ORDER RECEIPT', pageWidth / 2, 19, { align: 'center' });
+      pdf.setFont('courier', 'normal');
+      pdf.setFontSize(8);
+      pdf.text('RSVPretty - made just for your event', pageWidth / 2, 27, { align: 'center' });
+
+      let y = 39;
+      const divider = () => {
+        pdf.setDrawColor(140, 130, 117);
+        for (let x = 10; x < pageWidth - 10; x += 3) pdf.line(x, y, Math.min(x + 1.3, pageWidth - 10), y);
+      };
+      const drawRows = (items, bold = false) => items.forEach(([label, value]) => {
+        pdf.setFont('courier', bold ? 'bold' : 'normal');
+        pdf.setFontSize(8.5);
+        pdf.text(label, 11, y);
+        const lines = pdf.splitTextToSize(pdfText(value), 79);
+        lines.forEach((line, index) => pdf.text(line, pageWidth - 11, y + index * 4, { align: 'right' }));
+        y += Math.max(7, lines.length * 4 + 3);
+        divider();
+        y += 3;
+      });
+      drawRows(rows);
+      y += 2;
+      drawRows(amountRows);
+      y += 3;
+      pdf.setFont('courier', 'normal');
+      pdf.setFontSize(8.5);
+      pdf.text(`Payment proof: ${receiptValue('proof')}`, pageWidth / 2, y, { align: 'center' });
+      y += 8;
+
+      const barcode = receiptValue('orderId').replace(/\D/g, '');
+      let barX = 26;
+      for (let i = 0; i < 54; i++) {
+        const digit = Number(barcode[i % barcode.length]);
+        const barWidth = i % 3 === 0 ? 0.75 : 0.35 + (digit % 2) * 0.2;
+        if (i % 2 === 0) pdf.setFillColor(51, 47, 42).rect(barX, y, barWidth, 14, 'F');
+        barX += barWidth + 0.55;
+      }
+      y += 20;
+      pdf.setFont('courier', 'bold');
+      pdf.setFontSize(9);
+      pdf.text('Thank you for ordering!', pageWidth / 2, y, { align: 'center' });
+      pdf.save(`receipt-${orderId}.pdf`);
+    } catch (error) {
+      status.textContent = 'The receipt could not be exported. Please try again.';
+    } finally {
+      button.disabled = false;
+      button.textContent = 'Download Receipt (PDF)';
+    }
+  });
+
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    next();
+  });
+
+  dlg.addEventListener('close', () => {
+    if (orderId) resetOrderState();
   });
 })();
 

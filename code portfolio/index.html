@@ -362,11 +362,16 @@
         <div class="c">
           <h2>Choose Your Design Tier</h2>
         </div>
+        <p class="launch-banner">NEW SHOP OPENING OFFER</p>
         <div class="price">
           <article class="card bg-b">
             <div class="t" style="align-items: stretch">
               <h3>Save the Date</h3>
-              <div class="amt">$XX</div>
+              <div class="price-offer" data-package="Save the Date" data-normal-price="799" data-launch-price="499">
+                <span class="price-now">Starts at <strong>₱499</strong></span>
+                <s class="old-price">₱799</s>
+              </div>
+              <span class="launch-note">Launch price, limited time</span>
               <ul>
                 <li>One-page event showcase site</li>
                 <li>Countdown to your day</li>
@@ -381,7 +386,11 @@
             <span class="tag b">Most popular</span>
             <div class="t" style="align-items: stretch">
               <h3>Full Invitation</h3>
-              <div class="amt">$XX</div>
+              <div class="price-offer" data-package="Full Invitation" data-normal-price="1299" data-launch-price="999">
+                <span class="price-now">Starts at <strong>₱999</strong></span>
+                <s class="old-price">₱1,299</s>
+              </div>
+              <span class="launch-note">Launch price, limited time</span>
               <ul>
                 <li>Complete interactive web invitation</li>
                 <li>Custom guest survey questions</li>
@@ -394,7 +403,11 @@
           <article class="card bg-g">
             <div class="t" style="align-items: stretch">
               <h3>Premium</h3>
-              <div class="amt">$XX</div>
+              <div class="price-offer" data-package="Premium" data-normal-price="1999" data-launch-price="1799">
+                <span class="price-now">Starts at <strong>₱1,799</strong></span>
+                <s class="old-price">₱1,999</s>
+              </div>
+              <span class="launch-note">Launch price, limited time</span>
               <ul>
                 <li>Everything included in Full Invitation</li>
                 <li>Dark & Light Mode Toggle</li>
@@ -450,13 +463,13 @@
             <h2 id="inq-title">plan your event with me</h2>
             <div class="stephead">
               <p class="stepper" aria-live="polite">
-                Step <b class="sn">1</b> of 2:
+                Step <b class="sn">1</b> of 5:
                 <span class="stname">About your event</span>
               </p>
               <div class="pbar" aria-hidden="true"><i></i></div>
             </div>
 
-            <div class="step" data-step="1">
+            <div class="step" data-step="3" hidden>
               <div class="row2">
                 <label><span>Your name</span><input name="name" required
                     autocomplete="name" /></label>
@@ -554,8 +567,8 @@
               </p>
               <p class="imsg" role="status" aria-live="polite"></p>
               <div class="mnav">
-                <span></span><button class="btn" type="button"
-                  data-next>Next</button>
+                <button class="btn" type="button" data-back>Back</button>
+                <button class="btn" type="button" data-next>Continue to theme</button>
               </div>
             </div>
 
@@ -618,11 +631,6 @@
                 </label>
               </fieldset>
 
-              <label><span>Notes (optional)</span><textarea
-                  name="notes"
-                  rows="3"
-                  placeholder="Place, theme, anything you want me to know"></textarea>
-              </label>
               <input
                 class="hp"
                 name="website"
@@ -633,7 +641,88 @@
               <p class="imsg" role="status" aria-live="polite"></p>
               <div class="mnav">
                 <button class="btn" type="button" data-back>Back</button>
-                <button class="btn isend" type="submit">Send my details</button>
+                <button class="btn" type="button" data-next>Continue to payment</button>
+              </div>
+            </div>
+
+            <div class="step" data-step="1" hidden>
+              <section class="terms-card" aria-labelledby="terms-title">
+                <p class="terms-kicker">✦ please read before booking ✦</p>
+                <h3 id="terms-title">Website Service Terms &amp; Conditions</h3>
+                <ul>
+                  <li><strong>Service scope:</strong> Custom web development and digital website setup only; no physical artwork or printed stationery.</li>
+                  <li><strong>Payment:</strong> 50% upfront secures your queue. The remaining 50% is due when the website is complete, before launch or handoff.</li>
+                  <li><strong>Revisions:</strong> Includes 1–2 rounds as discussed during development. Major structural or aesthetic revisions beyond this scope incur extra charges.</li>
+                  <li><strong>Turnaround:</strong> Estimated completion is 1–2 weeks, depending on your responsiveness and the current queue.</li>
+                  <li><strong>Cancellation and refunds:</strong> Payments and deposits are strictly non-refundable once work has commenced.</li>
+                  <li><strong>Privacy:</strong> Photos, personal details, event logistics, and guest information are confidential and used only to create your project.</li>
+                  <li><strong>Communication:</strong> Your provided social handle and email are the primary channels for project discussions, previews, and approvals. Please keep them active and monitored.</li>
+                  <li><strong>Content and assets:</strong> You provide the necessary text, images, and custom links in a timely manner. Delays in receiving them extend the delivery schedule.</li>
+                </ul>
+              </section>
+
+              <label class="terms-agree"><input type="checkbox" name="termsAccepted" required /><span>I have read and agree to the terms and conditions</span></label>
+              <p class="imsg terms-msg" role="status" aria-live="polite"></p>
+              <div class="mnav">
+                <span></span>
+                <button class="btn terms-next" type="button" data-next disabled>Agree and continue</button>
+              </div>
+            </div>
+
+            <div class="step" data-step="4" hidden>
+              <section class="payment-box" aria-labelledby="payment-title">
+                <h3 id="payment-title">Your first payment</h3>
+                <p class="payment-note">MariBank is currently our available online payment option.</p>
+                <div class="payment-details">
+                  <div class="qr-frame"><img class="payment-qr" src="maribank-qr.png" alt="MariBank QR code" /><span class="qr-placeholder" hidden>Replace with<br />MariBank QR</span></div>
+                  <div>
+                    <p>Scan the QR code to pay your 50% upfront deposit.</p>
+                    <p class="amount-due-label">Amount due now <strong id="amount-due">₱499.50</strong></p>
+                  </div>
+                </div>
+                <label class="proof-label"><span>Upload payment proof (image or PDF)</span><input class="payment-proof" type="file" name="paymentProof" accept="image/png,image/jpeg,application/pdf,.png,.jpg,.jpeg,.pdf" required /></label>
+                <div class="proof-preview" hidden>
+                  <img class="proof-image" alt="Payment proof preview" />
+                  <iframe class="proof-pdf" title="Payment proof PDF preview" hidden></iframe>
+                  <span class="proof-filename"></span>
+                </div>
+              </section>
+              <p class="imsg" role="status" aria-live="polite"></p>
+              <div class="mnav">
+                <button class="btn" type="button" data-back>Back</button>
+                <button class="btn confirm-order" type="button" data-next disabled>Confirm and create receipt</button>
+              </div>
+            </div>
+
+            <div class="step" data-step="5" hidden>
+              <article class="receipt-paper" id="receipt-paper" aria-labelledby="receipt-title">
+                <span class="receipt-sticker receipt-sticker-one" aria-hidden="true">✦</span>
+                <span class="receipt-sticker receipt-sticker-two" aria-hidden="true">♥</span>
+                <h2 class="receipt-title" id="receipt-title" tabindex="-1">Order receipt</h2>
+                <p class="receipt-brand">RSVPretty · made just for your event</p>
+                <dl class="receipt-lines">
+                  <div><dt>Order ID</dt><dd data-receipt="orderId">Pending</dd></div>
+                  <div><dt>Date</dt><dd data-receipt="date">Pending</dd></div>
+                  <div><dt>Customer</dt><dd data-receipt="customer">Pending</dd></div>
+                  <div><dt>Contact</dt><dd data-receipt="contact">Pending</dd></div>
+                  <div><dt>Event</dt><dd data-receipt="event">Pending</dd></div>
+                  <div><dt>Theme</dt><dd data-receipt="theme">Pending</dd></div>
+                  <div><dt>Package</dt><dd data-receipt="package">Pending</dd></div>
+                </dl>
+                <div class="receipt-prices">
+                  <div><span>Normal price</span><s data-receipt="normalPrice">Pending</s></div>
+                  <div><span>Launch price</span><strong data-receipt="launchPrice">Pending</strong></div>
+                  <div><span>50% paid</span><strong data-receipt="paid">Pending</strong></div>
+                  <div><span>50% balance</span><strong data-receipt="balance">Pending</strong></div>
+                </div>
+                <p class="receipt-proof">Payment proof: <strong data-receipt="proof">Screenshot uploaded</strong></p>
+                <div class="receipt-barcode" role="img" aria-label="Decorative barcode"></div>
+                <p class="receipt-thanks">Thank you for ordering!</p>
+              </article>
+              <p class="receipt-status" role="status" aria-live="polite"></p>
+              <div class="mnav receipt-actions">
+                <button class="btn" type="button" data-close>Close</button>
+                <button class="btn" type="button" id="download-receipt">Download Receipt (PDF)</button>
               </div>
             </div>
           </form>
@@ -725,7 +814,7 @@
                   <path
                     d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm1.5 2.2V8l7.5 5 7.5-5v-.8L12 12.2z" /></svg></a>
             </div>
-            <p class="bf-handle">@yourhandle</p>
+            <p class="bf-handle">@rsvpretty</p>
           </div>
         </div>
 
@@ -745,6 +834,7 @@
       ♪
     </button>
     <button class="fab" id="totop" aria-label="Back to top">↑</button>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
     <script src="script.js" defer></script>
   </body>
 </html>
