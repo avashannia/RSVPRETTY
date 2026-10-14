@@ -1,5 +1,5 @@
 /**
- * RSVPretty – Google Apps Script (two-step inquiry version)
+ * RSVPretty – Google Apps Script (five-step order version)
  *
  * Replace your whole Code.gs with this file, Save, then:
  *  1. Pick "testInquiry" in the function dropdown and click Run (approve permissions if asked).
@@ -26,14 +26,20 @@ const CONFIG = {
   RATE_LIMIT_SECONDS: 20                       // same email can't send twice within this time
 };
 
-const VERSION = 'two-step-uploads-2026-10';   // shows when you open your /exec link, so you can tell which code is live
+const VERSION = 'five-step-orders-2026-10';   // shows when you open your /exec link, so you can tell which code is live
+const PRICES = {
+  'Save the Date': { regular: 799, launch: 499 },
+  'Full Invitation': { regular: 1299, launch: 999 },
+  Premium: { regular: 1999, launch: 1799 }
+};
 
 const TABS = {
   inquiries: {
     name: 'Inquiries',
-    headers: ['Timestamp', 'Name', 'Email', 'Platform', 'Social account', 'Event type', 'Package', 'Event date',
-              'Chosen theme', 'Theme credit', 'Features wanted', 'Survey questions', 'Own inspo link',
-              'Inspo file 1', 'Inspo file 2', 'Inspo file 3', 'Notes', 'Status']
+    headers: ['Timestamp', 'Order ID', 'Name', 'Email', 'Platform', 'Social account', 'Event type', 'Custom event details',
+          'Package', 'Event date', 'Chosen theme', 'Theme credit', 'Features wanted', 'Survey questions', 'Own inspo link',
+              'Inspo file 1', 'Inspo file 2', 'Inspo file 3', 'Terms accepted', 'Terms version', 'Payment method', 'Regular price (PHP)',
+          'Launch price (PHP)', 'Amount paid (PHP)', 'Balance due (PHP)', 'Payment proof link', 'Status']
   },
   rsvps: {
     name: 'RSVPs',
@@ -60,6 +66,15 @@ function doPost(e) {
     cache.put(key, '1', CONFIG.RATE_LIMIT_SECONDS);
 
     if (data.type === 'inquiry') {
+      if (!/^\d{4}-\d{2}-\d{5}$/.test(String(data.orderId || ''))) {
+        return json_({ ok: false, error: 'A valid order ID is required.' });
+      }
+      if (data.termsAccepted !== true) {
+        return json_({ ok: false, error: 'Terms must be accepted before ordering.' });
+      }
+      if (!data.paymentProof || !data.paymentProof.data) {
+        return json_({ ok: false, error: 'Payment proof is required.' });
+      }
       const yr = Number(String(data.eventDate || '').slice(0, 4));
       if (CONFIG.BOOKING_YEARS.indexOf(yr) === -1) return json_({ ok: false, error: 'Event date must be in ' + CONFIG.BOOKING_YEARS.join(' or ') + '.' });
       saveInquiry_(data, name, email);
@@ -80,27 +95,34 @@ function doGet() {
 
 /* ---------- Saving ---------- */
 function saveInquiry_(data, name, email) {
+  const orderId = clean_(data.orderId, 20);
   const platform = data.platform === 'Facebook' ? 'Facebook' : 'Instagram';
   const handle = clean_(data.handle, 200);
   const eventType = clean_(data.eventType, 60);
-  const pkg = clean_(data.package, 60);
+  const eventDetails = clean_(data.eventKind, 160);
+  const packageLabel = clean_(data.package, 60);
+  const tier = packageLabel.indexOf('Save the Date') === 0 ? 'Save the Date'
+    : packageLabel.indexOf('Premium') === 0 ? 'Premium'
+    : 'Full Invitation';
+  const price = PRICES[tier];
+  const pkg = packageLabel || tier;
   const eventDate = clean_(data.eventDate, 20);
   const theme = clean_(data.theme, 80);
   const themeCredit = clean_(data.themeCredit, 300);
   const features = clean_(data.features, 800);
   const survey = clean_(data.survey, 1500);
   const inspo = clean_(data.inspoLink, 300);
-
-  const noteParts = [];
-  const notes = clean_(data.notes, 1500);
   const extras = clean_(data.extras, 1500);
-  if (notes) noteParts.push(notes);
-  if (extras) noteParts.push('Extras: ' + extras);
-  const allNotes = noteParts.join(' | ');
-
   const up = saveInspoFiles_(data.inspoFiles, name);
-  const res = addRow_(TABS.inquiries, [new Date(), name, email, platform, handle, eventType, pkg, eventDate,
-                                       theme, themeCredit, features, survey, inspo, up.cells[0], up.cells[1], up.cells[2], allNotes, 'New']);
+  const paymentProof = savePaymentProof_(data.paymentProof, name, orderId);
+  if (!paymentProof) throw new Error('Payment proof could not be verified or saved.');
+
+  const res = addRow_(TABS.inquiries, [
+    new Date(), orderId, name, email, platform, handle, eventType, eventDetails,
+    pkg, eventDate, theme, themeCredit, features, survey, inspo,
+    up.cells[0], up.cells[1], up.cells[2], true, clean_(data.termsVersion, 40), 'MariBank',
+    price.regular, price.launch, price.launch / 2, price.launch / 2, paymentProof, 'New'
+  ]);
   if (up.hasImage) {                                       // make room so the pictures are visible
     res.sheet.setRowHeight(res.row, 120);
     [1, 2, 3].forEach(n => res.sheet.setColumnWidth(TABS.inquiries.headers.indexOf('Inspo file ' + n) + 1, 150));
@@ -112,16 +134,23 @@ function saveInquiry_(data, name, email) {
       subject: 'New inquiry: ' + name + ' (' + eventType + ', ' + eventDate + ')',
       body: [
         'Name: ' + name,
+        'Order ID: ' + orderId,
         'Email: ' + email,
         platform + ': ' + handle,
-        'Event: ' + eventType + ' on ' + eventDate,
+        'Event: ' + eventType + (eventDetails ? ' - ' + eventDetails : '') + ' on ' + eventDate,
         'Package: ' + (pkg || '-'),
+        'Regular price: PHP ' + price.regular,
+        'Launch price: PHP ' + price.launch,
+        'Paid: PHP ' + (price.launch / 2),
+        'Balance due: PHP ' + (price.launch / 2),
         'Theme: ' + (theme || '-') + (themeCredit ? ' (' + themeCredit + ')' : ''),
+        'Terms version accepted: ' + clean_(data.termsVersion, 40),
+        'Payment proof: ' + paymentProof,
         'Own inspo link: ' + (inspo || '-'),
         'Uploaded files: ' + (up.links.length ? up.links.join('\n') : '-'),
         'Features: ' + (features || '-'),
         'Survey questions: ' + (survey || '-'),
-        'Notes: ' + (allNotes || '-')
+        'Extras: ' + (extras || '-')
       ].join('\n')
     });
   }
@@ -137,10 +166,12 @@ function saveRsvp_(data, name, email) {
 /* ---------- Run this from the editor to test ---------- */
 function testInquiry() {
   saveInquiry_({
+    orderId: '2026-10-12345', termsAccepted: true, termsVersion: '2026-10-custom-website-terms',
     platform: 'Instagram', handle: '@test_account', eventType: 'Wedding', package: 'Full Invitation',
     eventDate: '2026-12-12', theme: 'Garden Vows', themeCredit: 'Owner name · License',
     features: 'Complete interactive web invitation, Live RSVP Google Sheets sync', survey: 'Dietary needs? Song requests?',
-    inspoLink: '', notes: 'This is a test row.', extras: 'Please add a map.',
+    paymentProof: { name: 'tiny.png', type: 'image/png', data: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==' },
+    inspoLink: '', extras: 'Please add a map.',
     inspoFiles: [{ name: 'tiny.png', type: 'image/png', data: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==' }]
   }, 'Test Person', 'test@example.com');
   Logger.log('Done. Check the "Inquiries" tab in your Sheet.');
@@ -152,6 +183,26 @@ const FILE_RULES = {
   'image/png':       { ext: 'png', magic: [0x89, 0x50, 0x4E, 0x47] },
   'application/pdf': { ext: 'pdf', magic: [0x25, 0x50, 0x44, 0x46] }
 };
+
+function savePaymentProof_(proof, owner, orderId) {
+  const rule = proof && FILE_RULES[proof.type];
+  if (!rule || !proof.data) return '';
+  let bytes;
+  try {
+    bytes = Utilities.base64Decode(proof.data);
+  } catch (err) {
+    return '';
+  }
+  if (bytes.length > 5 * 1024 * 1024 || !rule.magic.every((byte, index) => (bytes[index] & 0xFF) === byte)) return '';
+
+  const folders = DriveApp.getFoldersByName('RSVPretty payment proofs');
+  const folder = folders.hasNext() ? folders.next() : DriveApp.createFolder('RSVPretty payment proofs');
+  const safeOwner = String(owner).replace(/[^\w]/g, '_').slice(0, 20);
+  const fileName = String(orderId).replace(/[^\w-]/g, '') + '_' + safeOwner + '_payment-proof.' + rule.ext;
+  const file = folder.createFile(Utilities.newBlob(bytes, proof.type, fileName));
+  file.setSharing(DriveApp.Access.PRIVATE, DriveApp.Permission.NONE);
+  return file.getUrl();
+}
 
 function saveInspoFiles_(list, owner) {
   const out = { cells: ['', '', ''], hasImage: false, links: [] };

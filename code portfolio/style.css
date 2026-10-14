@@ -27,6 +27,27 @@ html {
   scroll-padding-top: 90px;
 }
 
+@media (min-width: 1000px) {
+  html {
+    scrollbar-color: var(--blue) var(--cream);
+    scrollbar-width: thin;
+  }
+
+  html::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  html::-webkit-scrollbar-track {
+    background: var(--cream);
+  }
+
+  html::-webkit-scrollbar-thumb {
+    border: 2px solid var(--cream);
+    border-radius: 99px;
+    background: var(--blue);
+  }
+}
+
 body {
   margin: 0;
   background: var(--cream);
@@ -576,6 +597,17 @@ form .btn {
   letter-spacing: -0.02em;
 }
 
+.pinkband .car {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  overflow: visible;
+  scroll-snap-type: none;
+}
+
+.pinkband .card {
+  min-width: 0;
+}
+
 .price {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -758,6 +790,10 @@ footer input {
   .steps,
   .price {
     grid-template-columns: 1fr;
+  }
+
+  .pinkband .car {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .tag.b {
@@ -1320,6 +1356,7 @@ select[aria-invalid="true"] {
 
 .calwrap {
   display: grid;
+  width: 100%;
   gap: 8px;
 }
 
@@ -1329,7 +1366,8 @@ select[aria-invalid="true"] {
 
 .cal {
   position: relative;
-  max-width: 380px;
+  width: 100%;
+  max-width: none;
   padding: 14px;
   border: 1.5px solid var(--ink);
   border-radius: 16px;
@@ -2026,18 +2064,18 @@ dialog#inspo h2 {
 }
 
 .price-now {
-  font: 500 14px/1.25 var(--sans);
+  font: 600 17px/1.25 var(--sans);
 }
 
 .price-now strong {
   display: block;
   color: #5e4935;
-  font: 400 38px/1.05 var(--serif);
+  font: 600 44px/1.05 var(--sans);
 }
 
 .old-price {
   color: #665e58;
-  font: 400 19px var(--sans);
+  font: 600 22px var(--sans);
 }
 
 .launch-note {
@@ -2126,17 +2164,17 @@ dialog#inspo h2 {
 
 .payment-details {
   display: grid;
-  grid-template-columns: 126px 1fr;
-  align-items: center;
+  grid-template-columns: 1fr;
+  align-items: start;
   gap: 14px;
 }
 
 .qr-frame {
   display: grid;
   place-items: center;
-  width: 126px;
-  aspect-ratio: 1;
-  padding: 8px;
+  width: 100%;
+  height: clamp(220px, 36vw, 340px);
+  padding: 14px;
   border: 1.5px dashed #4f8190;
   background: #fff;
 }
@@ -2150,13 +2188,22 @@ dialog#inspo h2 {
 
 .qr-placeholder {
   color: #4f8190;
-  font: 500 10px/1.4 var(--mono);
+  font: 600 16px/1.5 var(--mono);
   text-align: center;
 }
 
 .payment-details p {
   margin: 0 0 6px;
   font-size: 13px;
+}
+
+.payment-note {
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px dashed #4f8190;
+  background: #fff;
+  color: #375b66;
+  font: 500 12px/1.4 var(--sans);
 }
 
 .amount-due-label {
@@ -2337,17 +2384,21 @@ dialog#inspo h2 {
 }
 
 @media (max-width: 560px) {
+  .pinkband .car {
+    grid-template-columns: 1fr;
+  }
+
   .price-offer {
     justify-content: center;
   }
 
   .payment-details {
-    grid-template-columns: 96px minmax(0, 1fr);
+    grid-template-columns: 1fr;
     gap: 10px;
   }
 
   .qr-frame {
-    width: 96px;
+    height: 220px;
   }
 
   .amount-due-label strong {

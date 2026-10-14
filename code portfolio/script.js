@@ -631,6 +631,7 @@ paint();
   proofInput.addEventListener('change', () => {
     const file = proofInput.files[0];
     paymentProof = null;
+    q('.confirm-order').disabled = true;
     clearProofPreview();
     if (!file) return;
     if (!isPdf(file) && !isImg(file)) {
@@ -654,11 +655,13 @@ paint();
       q('.proof-image').src = paymentPreviewUrl;
     }
     proofPreview.hidden = false;
+    q('.confirm-order').disabled = !el.termsAccepted.checked;
     steps[3].querySelector('.imsg').textContent = '';
   });
 
   el.termsAccepted.addEventListener('change', () => {
     q('.terms-next').disabled = !el.termsAccepted.checked;
+    q('.confirm-order').disabled = !el.termsAccepted.checked || !paymentProof;
     steps[0].querySelector('.imsg').textContent = '';
   });
 
@@ -720,6 +723,8 @@ paint();
     const tier = selectedTier();
     const price = PRICE_TIERS[tier];
     const packageLabel = el.package.value === 'Not sure yet' ? 'Full Invitation (estimate)' : el.package.value;
+    const selectedTheme = form.querySelector('[name="theme"]:checked');
+    const themeInfo = (THEMES[el.eventType.value] || THEMES['Other']).find(theme => theme.title === selectedTheme?.value);
     orderId ||= makeOrderId();
     const data = {
       type: 'inquiry',
@@ -733,13 +738,17 @@ paint();
       eventKind: el.eventType.value === 'Other' ? el.eventKind.value.trim() : '',
       package: packageLabel,
       eventDate: el.eventDate.value,
-      theme: form.querySelector('[name="theme"]:checked')?.value || 'Not chosen',
+      theme: selectedTheme?.value || 'Not chosen',
+      themeCredit: themeInfo && (themeInfo.creditUrl || themeInfo.license)
+        ? `${themeInfo.creditName}${themeInfo.creditUrl ? ' (' + themeInfo.creditUrl + ')' : ''}${themeInfo.license ? ' · ' + themeInfo.license : ''}`
+        : '',
       features: [...form.querySelectorAll('[name=features]:checked')].map(input => input.value).join(', '),
       survey: q('.survey').hidden ? '' : el.survey.value.trim(),
       inspoLink: form.querySelector('[name="theme"]:checked')?.value === 'Own inspiration' ? el.inspoLink.value.trim() : '',
-      notes: el.notes.value.trim(),
       extras: q('.other').hidden ? '' : el.extras.value.trim(),
       termsAccepted: true,
+      termsVersion: '2026-10-custom-website-terms',
+      paymentMethod: 'MariBank',
       normalPrice: price.normal,
       launchPrice: price.launch,
       amountPaid: price.launch / 2,
@@ -765,7 +774,7 @@ paint();
       q('.receipt-status').textContent = url
         ? 'Order confirmed. Your receipt is ready to download.'
         : 'Demo mode: your order receipt is ready to download.';
-      goStep(4);
+      goStep(5);
     } catch (error) {
       message.textContent = error.message === 'toobig'
         ? 'The uploaded files are too large together. Try a smaller payment proof.'
@@ -779,15 +788,18 @@ paint();
 
   function next() {
     if (step === 1) {
+      if (!validateTerms()) return;
+      goStep(2);
+    } else if (step === 2) {
       if (!validate1()) return;
       if (renderedType !== el.eventType.value) { renderThemes(); renderedType = el.eventType.value; }
       if (renderedPkg !== el.package.value) { renderFeatures(); renderedPkg = el.package.value; }
-      goStep(2);
-    } else if (step === 2) {
-      if (!validateTheme()) return;
-      updatePaymentAmount();
       goStep(3);
     } else if (step === 3) {
+      if (!validateTheme()) return;
+      updatePaymentAmount();
+      goStep(4);
+    } else if (step === 4) {
       confirmOrder();
     }
   }
@@ -836,6 +848,7 @@ paint();
     q('.inspo').hidden = true;
     q('.dnote').hidden = true;
     q('.receipt-status').textContent = '';
+    q('.terms-next').disabled = true;
     q('.confirm-order').disabled = true;
     updatePlatform();
     goStep(1);
