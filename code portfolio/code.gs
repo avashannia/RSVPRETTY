@@ -7,10 +7,9 @@
  *  3. Deploy > Manage deployments > pencil icon > Version: New version > Deploy.
  *     (Your /exec link stays the same. Saving alone is not enough.)
  *
- * UPLOADED PICTURES / PDFs: guests' files are saved in a Drive folder called "RSVPretty inspo" (created
- * automatically). Pictures show inside the Sheet cells; PDFs show as a clickable link. The files are set to
- * "anyone with the link can view" so the pictures can appear in the Sheet. The first time, run
- * testInquiry and approve the extra Google Drive permission, then redeploy as a New version.
+ * INSPIRATION FILES: saved in the "RSVPretty inspo" Drive folder; pictures show inside the Sheet cells and
+ * PDFs are clickable links. PAYMENT PROOFS: saved privately in a separate Drive folder; only the link is
+ * recorded in the Sheet. Run testInquiry and approve Google Drive permissions, then redeploy as a New version.
  *
  * OLD "Inquiries" TAB: if your tab still has the old 9 columns, this script renames it to
  * "Inquiries (old yyyy-MM-dd HHmm)" automatically and starts a fresh "Inquiries" tab with the
@@ -197,6 +196,7 @@ function savePaymentProof_(proof, owner, orderId) {
 
   const folders = DriveApp.getFoldersByName('RSVPretty payment proofs');
   const folder = folders.hasNext() ? folders.next() : DriveApp.createFolder('RSVPretty payment proofs');
+  folder.setSharing(DriveApp.Access.PRIVATE, DriveApp.Permission.NONE);
   const safeOwner = String(owner).replace(/[^\w]/g, '_').slice(0, 20);
   const fileName = String(orderId).replace(/[^\w-]/g, '') + '_' + safeOwner + '_payment-proof.' + rule.ext;
   const file = folder.createFile(Utilities.newBlob(bytes, proof.type, fileName));

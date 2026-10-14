@@ -235,7 +235,7 @@ function unlock(e) {
 gestures.forEach((n) => addEventListener(n, unlock, { passive: true }));
 paint();
 
-// two step modal (theme picker, calendar, uploads)
+// Five-step order modal (terms, event details, theme, payment, receipt)
 /* TWO-STEP MODAL JS
    In script.js, delete the whole add-on block at the bottom, from the comment
    "ADD-ON JS: paste at the very end of script.js..." down to the final "})();",
@@ -282,7 +282,7 @@ paint();
       T('birthday', 2, 'Demure', 'Soft, refined and understated', 'View reference', 'https://pin.it/2EW9r4Db9'),
       T('birthday', 3, 'House Party', 'A relaxed and playful party vibe', 'View reference', 'https://pin.it/79f0VYz4G')
     ],
-    'K-pop cupsleeve event': [
+    'Cupsleeve event': [
       T('kpop', 1, 'Dreamy', 'Soft colors and an atmospheric fan-event feel', 'View reference', 'https://pin.it/1hISUn6ZP'),
       T('kpop', 2, 'Membership', 'A membership-inspired fan event', 'View reference', 'https://pin.it/57G6dCf4Z'),
       T('kpop', 3, 'Colorful', 'Vibrant colors and playful fan-event styling', 'View reference', 'https://pin.it/7qtjVl9H7')
