@@ -1133,10 +1133,6 @@ dialog#inquiry [hidden] {
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
-.dnote {
-  background: va
-  r(--pink);
-}
 .mnav {
   display: flex;
   justify-content: space-between;
@@ -2334,13 +2330,6 @@ dialog#inspo h2 {
   text-align: center;
 }
 
-.receipt-barcode {
-  width: 72%;
-  height: 48px;
-  margin: 16px auto 8px;
-  background: repeating-linear-gradient(90deg, #292622 0 2px, transparent 2px 4px, #292622 4px 5px, transparent 5px 8px, #292622 8px 12px, transparent 12px 14px);
-}
-
 .receipt-thanks {
   margin: 8px 0 0;
   padding-top: 10px;
@@ -2377,6 +2366,18 @@ dialog#inspo h2 {
   min-height: 22px;
   margin: 8px 0 0;
   text-align: center;
+}
+
+.receipt-payment-status {
+  margin: 12px 0;
+  padding: 8px 10px;
+  border: 1px dashed #8c8275;
+  background: #fff8e8;
+  text-align: center;
+}
+
+.receipt-payment-status strong {
+  color: #745a2b;
 }
 
 .receipt-actions {

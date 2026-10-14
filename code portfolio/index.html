@@ -521,8 +521,7 @@
               <label class="event-kind" hidden><span>What kind of event do you have in mind?</span><input name="eventKind" autocomplete="off" /></label>
 
               <div class="calwrap">
-                <span class="callabel" id="cal-label">Date of your event (2026
-                  or 2027)</span>
+                <span class="callabel" id="cal-label">Date of your event (at least 2 weeks ahead; 2026 or 2027)</span>
                 <input type="hidden" name="eventDate" />
                 <div class="cal" role="group" aria-labelledby="cal-label">
                   <img
@@ -552,11 +551,6 @@
                 </div>
                 <p class="cal-read" aria-live="polite">No date picked yet</p>
               </div>
-              <p class="mnote dnote" hidden>
-                That's a quick turnaround. I'll confirm over message if I can
-                make it in time.
-              </p>
-
               <p class="imsg" role="status" aria-live="polite"></p>
               <div class="mnav">
                 <button class="btn" type="button" data-back>Back</button>
@@ -704,11 +698,11 @@
                 <div class="receipt-prices">
                   <div><span>Normal price</span><s data-receipt="normalPrice">Pending</s></div>
                   <div><span>Launch price</span><strong data-receipt="launchPrice">Pending</strong></div>
-                  <div><span>50% paid</span><strong data-receipt="paid">Pending</strong></div>
+                  <div><span>Deposit submitted (50%)</span><strong data-receipt="paid">Pending</strong></div>
                   <div><span>50% balance</span><strong data-receipt="balance">Pending</strong></div>
                 </div>
-                <p class="receipt-proof">Payment proof: <strong data-receipt="proof">Screenshot uploaded</strong></p>
-                <div class="receipt-barcode" role="img" aria-label="Decorative barcode"></div>
+                <p class="receipt-payment-status">Payment status: <strong data-receipt="paymentStatus">Pending verification</strong></p>
+                <p class="receipt-proof">Proof received: <strong data-receipt="proof">Payment proof uploaded</strong></p>
                 <p class="receipt-thanks">Thank you for ordering!</p>
               </article>
               <p class="receipt-status" role="status" aria-live="polite"></p>

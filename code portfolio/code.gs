@@ -25,7 +25,7 @@ const CONFIG = {
   RATE_LIMIT_SECONDS: 20                       // same email can't send twice within this time
 };
 
-const VERSION = 'five-step-orders-2026-10';   // shows when you open your /exec link, so you can tell which code is live
+const VERSION = 'five-step-orders-2026-10-v2';   // identifies the 14-day calendar and payment-status update
 const PRICES = {
   'Save the Date': { regular: 799, launch: 499 },
   'Full Invitation': { regular: 1299, launch: 999 },
@@ -38,7 +38,7 @@ const TABS = {
     headers: ['Timestamp', 'Order ID', 'Name', 'Email', 'Platform', 'Social account', 'Event type', 'Custom event details',
           'Package', 'Event date', 'Chosen theme', 'Theme credit', 'Features wanted', 'Survey questions', 'Own inspo link',
               'Inspo file 1', 'Inspo file 2', 'Inspo file 3', 'Terms accepted', 'Terms version', 'Payment method', 'Regular price (PHP)',
-          'Launch price (PHP)', 'Amount paid (PHP)', 'Balance due (PHP)', 'Payment proof link', 'Status']
+          'Launch price (PHP)', 'Amount paid (PHP)', 'Balance due (PHP)', 'Payment proof link', 'Payment status', 'Order status']
   },
   rsvps: {
     name: 'RSVPs',
@@ -74,8 +74,9 @@ function doPost(e) {
       if (!data.paymentProof || !data.paymentProof.data) {
         return json_({ ok: false, error: 'Payment proof is required.' });
       }
-      const yr = Number(String(data.eventDate || '').slice(0, 4));
-      if (CONFIG.BOOKING_YEARS.indexOf(yr) === -1) return json_({ ok: false, error: 'Event date must be in ' + CONFIG.BOOKING_YEARS.join(' or ') + '.' });
+      if (!isEventDateAvailable_(data.eventDate)) {
+        return json_({ ok: false, error: 'Event date must be at least 14 days away and in ' + CONFIG.BOOKING_YEARS.join(' or ') + '.' });
+      }
       saveInquiry_(data, name, email);
     } else {
       saveRsvp_(data, name, email);
@@ -120,7 +121,7 @@ function saveInquiry_(data, name, email) {
     new Date(), orderId, name, email, platform, handle, eventType, eventDetails,
     pkg, eventDate, theme, themeCredit, features, survey, inspo,
     up.cells[0], up.cells[1], up.cells[2], true, clean_(data.termsVersion, 40), 'MariBank',
-    price.regular, price.launch, price.launch / 2, price.launch / 2, paymentProof, 'New'
+    price.regular, price.launch, price.launch / 2, price.launch / 2, paymentProof, 'Pending verification', 'New'
   ]);
   if (up.hasImage) {                                       // make room so the pictures are visible
     res.sheet.setRowHeight(res.row, 120);
@@ -142,6 +143,7 @@ function saveInquiry_(data, name, email) {
         'Launch price: PHP ' + price.launch,
         'Paid: PHP ' + (price.launch / 2),
         'Balance due: PHP ' + (price.launch / 2),
+        'Payment status: Pending verification',
         'Theme: ' + (theme || '-') + (themeCredit ? ' (' + themeCredit + ')' : ''),
         'Terms version accepted: ' + clean_(data.termsVersion, 40),
         'Payment proof: ' + paymentProof,
@@ -271,6 +273,26 @@ function parseBody_(e) {
     try { return JSON.parse(e.postData.contents); } catch (_) { /* not JSON */ }
   }
   return (e && e.parameter) || {};
+}
+
+function isEventDateAvailable_(value) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value || ''));
+  if (!match) return false;
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  if (CONFIG.BOOKING_YEARS.indexOf(year) === -1) return false;
+
+  const selected = new Date(year, month - 1, day);
+  if (selected.getFullYear() !== year || selected.getMonth() !== month - 1 || selected.getDate() !== day) return false;
+  selected.setHours(0, 0, 0, 0);
+
+  const earliest = new Date();
+  earliest.setHours(0, 0, 0, 0);
+  earliest.setDate(earliest.getDate() + 14);
+  const latestYear = Math.max.apply(null, CONFIG.BOOKING_YEARS);
+  const latest = new Date(latestYear, 11, 31);
+  return selected >= earliest && selected <= latest;
 }
 
 // Trim, limit length, and stop spreadsheet formulas (=, +, -, @) from running

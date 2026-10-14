@@ -1,5 +1,5 @@
 const APPS_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbzKLN-AkoQT2ONmP3-lhGD_klJz7JpWieuMsVjpFBcfcCSnLsppanaZ7n5LhI7nJaufHg/exec?count=1";
+  "https://script.google.com/macros/s/AKfycbyrjVh9S6rSssz1mA2OpqnS05mvDqofR1UBi4P-V8EnwVRv2RfVyMLQRKf8ZTC2Pz9ofg/exec?count=1";
 const $ = (s) => document.querySelector(s);
 $("#tk").innerHTML =
   "<span>RSVPS MADE SIMPLE &nbsp;|&nbsp; SAVE THE DATES MADE SIMPLE &nbsp;|&nbsp; </span>".repeat(
@@ -332,6 +332,7 @@ paint();
 
   /* Booking window and upload limits: edit freely */
   const MIN_YEAR = 2026, MAX_YEAR = 2027;       // only dates in these years can be booked
+  const MIN_LEAD_DAYS = 14;
   const MAX_FILES = 3, MAX_PDF_MB = 2.5, MAX_IMG_MB = 15;
 
   /* ===================== modal logic ===================== */
@@ -349,12 +350,11 @@ paint();
   /* ----- dates ----- */
   const today = () => { const t = new Date(); return new Date(t.getFullYear(), t.getMonth(), t.getDate()); };
   const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-  const daysUntil = v => { const [y, m, d] = v.split('-').map(Number); return Math.round((new Date(y, m - 1, d) - today()) / 864e5); };
-  const dateOk = v => { if (!v) return false; const y = Number(v.slice(0, 4)); return daysUntil(v) >= 0 && y >= MIN_YEAR && y <= MAX_YEAR; };
-  function checkDate() {
-    const v = el.eventDate.value, n = v ? daysUntil(v) : -1;
-    q('.dnote').hidden = !(n >= 0 && n < 7);          // friendly note only, never blocks
-  }
+  const dateOk = v => {
+    if (!v) return false;
+    const picked = fromIso(v);
+    return iso(picked) === v && picked >= minD && picked <= maxD;
+  };
 
   /* ----- styled calendar (replaces the browser's own date picker) ----- */
   const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -390,7 +390,7 @@ paint();
   function pickDate(v) {
     el.eventDate.value = v;
     calBox.classList.remove('bad');
-    readCal(); checkDate(); renderCal();
+    readCal(); renderCal();
     const s = calGrid.querySelector('.sel'); if (s) s.focus();
   }
   q('.cal-prev').addEventListener('click', () => { view = new Date(view.getFullYear(), view.getMonth() - 1, 1); renderCal(); });
@@ -438,7 +438,7 @@ paint();
       [el.email, /^\S+@\S+\.\S+$/.test(el.email.value.trim()), 'Please add a valid email.'],
       [el.handle, !!el.handle.value.trim(), 'Add your Instagram or Facebook so I can message you.'],
       ...(el.eventType.value === 'Other' ? [[el.eventKind, !!el.eventKind.value.trim(), 'Tell me what kind of event you have in mind.']] : []),
-      [el.eventDate, dateOk(el.eventDate.value), `Pick a date from today to December 31, ${MAX_YEAR}.`]
+      [el.eventDate, dateOk(el.eventDate.value), `Choose a date at least ${MIN_LEAD_DAYS} days from today and by December 31, ${MAX_YEAR}.`]
     ];
     checks.forEach(([f, ok]) => f.setAttribute('aria-invalid', String(!ok)));
     const dateCheck = checks.find(([field]) => field === el.eventDate);
@@ -709,6 +709,7 @@ paint();
     set('launchPrice', formatMoney(price.launch));
     set('paid', formatMoney(price.launch / 2, 2));
     set('balance', formatMoney(price.launch / 2, 2));
+    set('paymentStatus', 'Pending verification');
     set('proof', isPdf(paymentProof) ? 'PDF uploaded' : 'Screenshot uploaded');
   }
 
@@ -772,8 +773,8 @@ paint();
       }
       renderReceipt(data, tier, orderId);
       q('.receipt-status').textContent = url
-        ? 'Order confirmed. Your receipt is ready to download.'
-        : 'Demo mode: your order receipt is ready to download.';
+        ? 'Order received. Payment proof is pending verification.'
+        : 'Demo mode: payment status is pending verification.';
       goStep(5);
     } catch (error) {
       message.textContent = error.message === 'toobig'
@@ -815,10 +816,14 @@ paint();
     const card = trigger && trigger.closest('.price .card');   // package preselected from the pricing buttons
     const pkg = card ? card.querySelector('h3').textContent.trim() : '';
     el.package.value = [...el.package.options].some(o => o.value === pkg) ? pkg : 'Not sure yet';
-    minD = new Date(Math.max(today(), new Date(MIN_YEAR, 0, 1)));   // no past dates
-    maxD = new Date(MAX_YEAR, 11, 31);                               // nothing too far ahead
+    const earliest = today();
+    earliest.setDate(earliest.getDate() + MIN_LEAD_DAYS);
+    minD = new Date(Math.max(earliest.getTime(), new Date(MIN_YEAR, 0, 1).getTime()));
+    maxD = new Date(MAX_YEAR, 11, 31);
     const v = el.eventDate.value;
-    view = v ? new Date(Number(v.slice(0, 4)), Number(v.slice(5, 7)) - 1, 1) : new Date(minD.getFullYear(), minD.getMonth(), 1);
+    if (v && !dateOk(v)) el.eventDate.value = '';
+    const selectedDate = el.eventDate.value ? fromIso(el.eventDate.value) : minD;
+    view = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
     renderCal(); readCal();
     dlg.showModal();
     goStep(1);
@@ -846,7 +851,6 @@ paint();
     el.eventKind.required = false;
     q('.event-kind').hidden = true;
     q('.inspo').hidden = true;
-    q('.dnote').hidden = true;
     q('.receipt-status').textContent = '';
     q('.terms-next').disabled = true;
     q('.confirm-order').disabled = true;
@@ -880,7 +884,7 @@ paint();
       const amountRows = [
         ['Normal price', receiptValue('normalPrice')],
         ['Launch price', receiptValue('launchPrice')],
-        ['50% paid', receiptValue('paid')],
+        ['Deposit submitted (50%)', receiptValue('paid')],
         ['50% balance', receiptValue('balance')]
       ];
       const pdfText = text => text.replaceAll('₱', 'PHP ');
@@ -921,18 +925,10 @@ paint();
       y += 3;
       pdf.setFont('courier', 'normal');
       pdf.setFontSize(8.5);
-      pdf.text(`Payment proof: ${receiptValue('proof')}`, pageWidth / 2, y, { align: 'center' });
+      pdf.text(`Payment status: ${receiptValue('paymentStatus')}`, pageWidth / 2, y, { align: 'center' });
+      y += 6;
+      pdf.text(`Proof received: ${receiptValue('proof')}`, pageWidth / 2, y, { align: 'center' });
       y += 8;
-
-      const barcode = receiptValue('orderId').replace(/\D/g, '');
-      let barX = 26;
-      for (let i = 0; i < 54; i++) {
-        const digit = Number(barcode[i % barcode.length]);
-        const barWidth = i % 3 === 0 ? 0.75 : 0.35 + (digit % 2) * 0.2;
-        if (i % 2 === 0) pdf.setFillColor(51, 47, 42).rect(barX, y, barWidth, 14, 'F');
-        barX += barWidth + 0.55;
-      }
-      y += 20;
       pdf.setFont('courier', 'bold');
       pdf.setFontSize(9);
       pdf.text('Thank you for ordering!', pageWidth / 2, y, { align: 'center' });
