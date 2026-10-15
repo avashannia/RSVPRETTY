@@ -2166,19 +2166,25 @@ dialog#inspo h2 {
 }
 
 .qr-frame {
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: clamp(220px, 36vw, 340px);
   padding: 14px;
   border: 1.5px dashed #4f8190;
   background: #fff;
+  overflow: hidden;
 }
 
 .payment-qr {
   display: block;
   width: 100%;
   height: 100%;
+  min-width: 0;
+  min-height: 0;
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
 }
 
