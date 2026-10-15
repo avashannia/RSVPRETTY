@@ -299,16 +299,16 @@
         </div>
         <div class="tpl">
           <article class="card" data-c="wedding">
-            <div class="ph bg-p"><img class="template-preview" src="" alt="Wedding inspiration preview" loading="lazy"></div>
+            <div class="ph bg-p"><img class="template-preview" src="assets/wedding-1.jpg" alt="Wedding inspiration preview" loading="lazy"></div>
             <div class="t">
               <h3>Eternal Vows</h3></div>
           </article>
           <article class="card" data-c="save">
-            <div class="ph bg-b"><img class="template-preview" src="" alt="Save-the-date inspiration preview" loading="lazy"></div>
+            <div class="ph bg-b"><img class="template-preview" src="assets/save-1.jpg" alt="Save-the-date inspiration preview" loading="lazy"></div>
             <div class="t"><h3>Save the Date</h3></div>
           </article>
           <article class="card" data-c="birthday">
-            <div class="ph bg-g"><img class="template-preview" src="assets/bday-1.jpg" alt="Birthday inspiration preview" loading="lazy"></div>
+            <div class="ph bg-g"><img class="template-preview" src="assets/birthday-1.jpg" alt="Birthday inspiration preview" loading="lazy"></div>
             <div class="t"><h3>Cheers to Another Year</h3></div>
           </article>
           <article class="card" data-c="kpop">
@@ -316,7 +316,7 @@
             <div class="t"><h3>Cupsleeve Event</h3></div>
           </article>
           <article class="card" data-c="business">
-            <div class="ph bg-b"><img class="template-preview" src="assets/small-business-1.jpg" alt="Small business event inspiration preview" loading="lazy"></div>
+            <div class="ph bg-b"><img class="template-preview" src="assets/business-1.jpg" alt="Small business event inspiration preview" loading="lazy"></div>
             <div class="t"><h3>Small Business</h3></div>
           </article>
         </div>
@@ -362,11 +362,16 @@
         <div class="c">
           <h2>Choose Your Design Tier</h2>
         </div>
+        <p class="launch-banner">NEW SHOP OPENING OFFER</p>
         <div class="price">
           <article class="card bg-b">
             <div class="t" style="align-items: stretch">
               <h3>Save the Date</h3>
-              <div class="amt">$XX</div>
+              <div class="price-offer" data-package="Save the Date" data-normal-price="799" data-launch-price="499">
+                <span class="price-now">Starts at <strong>₱499</strong></span>
+                <s class="old-price">₱799</s>
+              </div>
+              <span class="launch-note">Launch price, limited time</span>
               <ul>
                 <li>One-page event showcase site</li>
                 <li>Live countdown timer display</li>
@@ -380,7 +385,11 @@
             <span class="tag b">Most popular</span>
             <div class="t" style="align-items: stretch">
               <h3>Full Invitation</h3>
-              <div class="amt">$XX</div>
+              <div class="price-offer" data-package="Full Invitation" data-normal-price="1299" data-launch-price="999">
+                <span class="price-now">Starts at <strong>₱999</strong></span>
+                <s class="old-price">₱1,299</s>
+              </div>
+              <span class="launch-note">Launch price, limited time</span>
               <ul>
                 <li>Complete interactive web invitation</li>
                 <li>Custom guest survey questions</li>
@@ -393,7 +402,11 @@
           <article class="card bg-g">
             <div class="t" style="align-items: stretch">
               <h3>Premium</h3>
-              <div class="amt">$XX</div>
+              <div class="price-offer" data-package="Premium" data-normal-price="1999" data-launch-price="1799">
+                <span class="price-now">Starts at <strong>₱1,799</strong></span>
+                <s class="old-price">₱1,999</s>
+              </div>
+              <span class="launch-note">Launch price, limited time</span>
               <ul>
                 <li>Everything included in Full Invitation</li>
                 <li>Dark & Light Mode Toggle</li>
@@ -437,6 +450,8 @@
           <button class="mclose" type="button" data-close aria-label="Close">
             ×
           </button>
+          <span class="modal-sticker modal-sticker-one" aria-hidden="true"><img class="em" src="./assets/new/download__5_-removebg-preview.png" alt /></span>
+          <span class="modal-sticker modal-sticker-two" aria-hidden="true"><img class="em" src="./assets/new/pink_stickers_iphone___iOS_18_emoji_stickers___iOS_emoji___18_iOS_update___18_iOS_stickers___18-removebg-preview.png" alt /></span>
           <span class="mstk"><img
               class="em"
               src="./assets/new/download__6_-removebg-preview.png"
@@ -447,13 +462,13 @@
             <h2 id="inq-title">plan your event with me</h2>
             <div class="stephead">
               <p class="stepper" aria-live="polite">
-                Step <b class="sn">1</b> of 2:
+                Step <b class="sn">1</b> of 5:
                 <span class="stname">About your event</span>
               </p>
               <div class="pbar" aria-hidden="true"><i></i></div>
             </div>
 
-            <div class="step" data-step="1">
+            <div class="step" data-step="2" hidden>
               <div class="row2">
                 <label><span>Full name</span><input name="name" required
                     autocomplete="name" /></label>
@@ -486,7 +501,7 @@
                   <select name="eventType">
                     <option>Wedding</option>
                     <option>Birthday</option>
-                    <option>K-pop cupsleeve event</option>
+                    <option>Cupsleeve event</option>
                     <option>Small business</option>
                     <option>Save the date only</option>
                     <option>Other</option>
@@ -502,9 +517,10 @@
                 </label>
               </div>
 
+              <label class="event-kind" hidden><span>What kind of event do you have in mind?</span><input name="eventKind" autocomplete="off" /></label>
+
               <div class="calwrap">
-                <span class="callabel" id="cal-label">Date of your event (2026
-                  or 2027)</span>
+                <span class="callabel" id="cal-label">Date of your event (at least 2 weeks ahead; 2026 or 2027)</span>
                 <input type="hidden" name="eventDate" />
                 <div class="cal" role="group" aria-labelledby="cal-label">
                   <img
@@ -534,29 +550,16 @@
                 </div>
                 <p class="cal-read" aria-live="polite">No date picked yet</p>
               </div>
-              <p class="mnote dnote" hidden>
-                That's a quick turnaround. I'll confirm over message if I can
-                make it in time.
-              </p>
-
-              <p class="mnote">
-                Each package includes
-                <b>1–2 rounds of revisions (additional revisions can be added
-                  for a small fee).</b>
-                Your custom website takes about <b>1 week </b> to complete.
-                Thank you for your patience! I’ll send you updates every step of
-                the way directly through the social account you provided.
-              </p>
               <p class="imsg" role="status" aria-live="polite"></p>
               <div class="mnav">
-                <span></span><button class="btn" type="button"
-                  data-next>Next</button>
+                <button class="btn" type="button" data-back>Back</button>
+                <button class="btn" type="button" data-next>Continue to theme</button>
               </div>
             </div>
 
-            <div class="step" data-step="2" hidden>
+            <div class="step" data-step="3" hidden>
               <fieldset class="themes">
-                <legend>
+                <legend tabindex="-1">
                   Pick a look for your <b class="evname"></b> site
                 </legend>
           <p class="mnote">
@@ -613,11 +616,6 @@
                 </label>
               </fieldset>
 
-              <label><span>Notes (optional)</span><textarea
-                  name="notes"
-                  rows="3"
-                  placeholder="Place, theme, anything you want me to know"></textarea>
-              </label>
               <input
                 class="hp"
                 name="website"
@@ -628,7 +626,88 @@
               <p class="imsg" role="status" aria-live="polite"></p>
               <div class="mnav">
                 <button class="btn" type="button" data-back>Back</button>
-                <button class="btn isend" type="submit">Send my details</button>
+                <button class="btn" type="button" data-next>Continue to payment</button>
+              </div>
+            </div>
+
+            <div class="step" data-step="1" hidden>
+              <section class="terms-card" aria-labelledby="terms-title">
+                <p class="terms-kicker">✦ please read before booking ✦</p>
+                <h3 id="terms-title">Website Service Terms &amp; Conditions</h3>
+                <ul>
+                  <li><strong>Service scope:</strong> Custom web development and digital website setup only; no physical artwork or printed stationery.</li>
+                  <li><strong>Payment:</strong> 50% upfront secures your queue. The remaining 50% is due when the website is complete, before launch or handoff.</li>
+                  <li><strong>Revisions:</strong> Includes 1–2 rounds as discussed during development. Major structural or aesthetic revisions beyond this scope incur extra charges.</li>
+                  <li><strong>Turnaround:</strong> Estimated completion is 1–2 weeks, depending on your responsiveness and the current queue.</li>
+                  <li><strong>Cancellation and refunds:</strong> Payments and deposits are strictly non-refundable once work has commenced.</li>
+                  <li><strong>Privacy:</strong> Photos, personal details, event logistics, and guest information are confidential and used only to create your project.</li>
+                  <li><strong>Communication:</strong> Your provided social handle and email are the primary channels for project discussions, previews, and approvals. Please keep them active and monitored.</li>
+                  <li><strong>Content and assets:</strong> You provide the necessary text, images, and custom links in a timely manner. Delays in receiving them extend the delivery schedule.</li>
+                </ul>
+              </section>
+
+              <label class="terms-agree"><input type="checkbox" name="termsAccepted" required /><span>I have read and agree to the terms and conditions</span></label>
+              <p class="imsg terms-msg" role="status" aria-live="polite"></p>
+              <div class="mnav">
+                <span></span>
+                <button class="btn terms-next" type="button" data-next disabled>Agree and continue</button>
+              </div>
+            </div>
+
+            <div class="step" data-step="4" hidden>
+              <section class="payment-box" aria-labelledby="payment-title">
+                <h3 id="payment-title">Your first payment</h3>
+                <p class="payment-note">MariBank is currently our available online payment option.</p>
+                <div class="payment-details">
+                  <div class="qr-frame"><img class="payment-qr" src="maribank-qr.png" alt="MariBank QR code" /><span class="qr-placeholder" hidden>Replace with<br />MariBank QR</span></div>
+                  <div>
+                    <p>Scan the QR code to pay your 50% upfront deposit.</p>
+                    <p class="amount-due-label">Amount due now <strong id="amount-due">₱499.50</strong></p>
+                  </div>
+                </div>
+                <label class="proof-label"><span>Upload payment proof (image or PDF)</span><input class="payment-proof" type="file" name="paymentProof" accept="image/png,image/jpeg,application/pdf,.png,.jpg,.jpeg,.pdf" required /></label>
+                <div class="proof-preview" hidden>
+                  <img class="proof-image" alt="Payment proof preview" />
+                  <iframe class="proof-pdf" title="Payment proof PDF preview" hidden></iframe>
+                  <span class="proof-filename"></span>
+                </div>
+              </section>
+              <p class="imsg" role="status" aria-live="polite"></p>
+              <div class="mnav">
+                <button class="btn" type="button" data-back>Back</button>
+                <button class="btn confirm-order" type="button" data-next disabled>Confirm and create receipt</button>
+              </div>
+            </div>
+
+            <div class="step" data-step="5" hidden>
+              <article class="receipt-paper" id="receipt-paper" aria-labelledby="receipt-title">
+                <span class="receipt-sticker receipt-sticker-one" aria-hidden="true">✦</span>
+                <span class="receipt-sticker receipt-sticker-two" aria-hidden="true">♥</span>
+                <h2 class="receipt-title" id="receipt-title" tabindex="-1">Order receipt</h2>
+                <p class="receipt-brand">RSVPretty · made just for your event</p>
+                <dl class="receipt-lines">
+                  <div><dt>Order ID</dt><dd data-receipt="orderId">Pending</dd></div>
+                  <div><dt>Date</dt><dd data-receipt="date">Pending</dd></div>
+                  <div><dt>Customer</dt><dd data-receipt="customer">Pending</dd></div>
+                  <div><dt>Contact</dt><dd data-receipt="contact">Pending</dd></div>
+                  <div><dt>Event</dt><dd data-receipt="event">Pending</dd></div>
+                  <div><dt>Theme</dt><dd data-receipt="theme">Pending</dd></div>
+                  <div><dt>Package</dt><dd data-receipt="package">Pending</dd></div>
+                </dl>
+                <div class="receipt-prices">
+                  <div><span>Normal price</span><s data-receipt="normalPrice">Pending</s></div>
+                  <div><span>Launch price</span><strong data-receipt="launchPrice">Pending</strong></div>
+                  <div><span>Deposit submitted (50%)</span><strong data-receipt="paid">Pending</strong></div>
+                  <div><span>50% balance</span><strong data-receipt="balance">Pending</strong></div>
+                </div>
+                <p class="receipt-payment-status">Payment status: <strong data-receipt="paymentStatus">Pending verification</strong></p>
+                <p class="receipt-proof">Proof received: <strong data-receipt="proof">Payment proof uploaded</strong></p>
+                <p class="receipt-thanks">Thank you for ordering!</p>
+              </article>
+              <p class="receipt-status" role="status" aria-live="polite"></p>
+              <div class="mnav receipt-actions">
+                <button class="btn" type="button" data-close>Close</button>
+                <button class="btn" type="button" id="download-receipt">Download Receipt (PDF)</button>
               </div>
             </div>
           </form>
@@ -687,7 +766,8 @@
           <div class="bf-soc">
             <h3>Say hi</h3>
             <div class="soc">
-              <a href="#https://www.instagram.com/resvpretty_website/" target="_blank" aria-label="Instagram"><svg viewBox="0 0 24 24"
+              <!-- Replace each href="#" with your real profile link -->
+              <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"
                   aria-hidden="true">
                   <rect
                     x="3"
@@ -706,11 +786,11 @@
                     stroke="currentColor"
                     stroke-width="2" />
                   <circle cx="17.3" cy="6.7" r="1.3" /></svg></a>
-              <a href="#https://www.facebook.com/profile.php?id=61595126112454" target="_blank" aria-label="Facebook"><svg viewBox="0 0 24 24"
+              <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"
                   aria-hidden="true">
                   <path
                     d="M14 8V6.5c0-.8.3-1.2 1.3-1.2H17V2h-2.6C11.6 2 10.5 3.6 10.5 6v2H8v3.2h2.5V22H14V11.2h2.7L17 8z" /></svg></a>
-              <a href="#https://www.tiktok.com/@rsvpretty" target="_blank" aria-label="TikTok"><svg viewBox="0 0 24 24"
+              <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24"
                   aria-hidden="true">
                   <path
                     d="M16 3c.4 2.6 2 4.2 4.5 4.4v3.1c-1.6 0-3.1-.5-4.5-1.4v6.4A6.4 6.4 0 1 1 9.6 9.2v3.2a3.2 3.2 0 1 0 3.2 3.2V3z" /></svg></a>
@@ -739,6 +819,7 @@
       ♪
     </button>
     <button class="fab" id="totop" aria-label="Back to top">↑</button>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
     <script src="script.js" defer></script>
   </body>
 </html>
